@@ -1,12 +1,15 @@
 import 'dotenv/config';
+import http from 'http';
 import express, { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import passport from './middlewares/passport';
 import authRoutes from './routes/auth/auth.routes';
 import usersRoutes from './routes/users/users.router';
+import { initSocket } from './socket';
 
 const app = express();
+const httpServer = http.createServer(app);
 const port = process.env.PORT || 3000;
 
 app.use(cors({
@@ -30,7 +33,9 @@ async function start() {
       console.log('No MONGODB_URI provided, skipping database connection');
     }
 
-    app.listen(port, () => {
+    initSocket(httpServer);
+
+    httpServer.listen(port, () => {
       console.log(`Server is running on port ${port}`);
     });
   } catch (err) {
