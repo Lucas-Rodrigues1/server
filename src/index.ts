@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import router from './routes/users/users.router';
+import 'dotenv/config';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -15,8 +16,12 @@ app.get('/', (req: Request, res: Response) => {
 async function start() {
   try {
     // Example MongoDB connection, adjust URI as needed
-    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/test');
-    console.log('Connected to MongoDB');
+    if (process.env.MONGODB_URI) {
+      await mongoose.connect(process.env.MONGODB_URI);
+      console.log('Connected to MongoDB');
+    } else {
+      console.log('No MONGODB_URI provided, skipping database connection');
+    }
 
     app.listen(port, () => {
       console.log(`Server is running on port ${port}`);
