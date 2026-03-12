@@ -1,4 +1,4 @@
-import 'dotenv/config';
+﻿import 'dotenv/config';
 import http from 'http';
 import express, { Request, Response } from 'express';
 import mongoose from 'mongoose';
@@ -20,7 +20,7 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
-app.use(express.json());
+app.use(express.json({ limit: '5mb' }));
 
 app.use(passport.initialize());
 

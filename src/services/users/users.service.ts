@@ -43,6 +43,10 @@ class UsersService {
     async updateStatus(id: string, status: UserStatus) {
         return await UsersRepository.updateStatus(id, status);
     }
+
+    async updateAvatar(id: string, avatar: string | null) {
+        return await UsersRepository.updateAvatar(id, avatar);
+    }
 }
 
 export default new UsersService();

@@ -1,4 +1,4 @@
-import { Router } from "express";
+﻿import { Router } from "express";
 import UsersController from "../../controllers/users/users.controller";
 import UsersService from "../../services/users/users.service";
 import { authenticateJWT } from "../../middlewares/auth";
@@ -18,14 +18,14 @@ router.post("/create", async (req, res) => {
         return;
     }
     const result = await UsersController.create({ name, username, password });
-    
+
     if (!(result as any).success) {
         const isDuplicateError = (result as any).errorDetails?.includes('E11000');
         const statusCode = isDuplicateError ? 409 : 400;
         res.status(statusCode).json(result);
         return;
     }
-    
+
     res.status(201).json(result);
 });
 
@@ -36,8 +36,33 @@ router.get('/search', authenticateJWT, async (req: any, res) => {
     res.json({ success: true, users });
 });
 
-// Status is managed via socket (status:change event), not REST.
+router.get('/me', authenticateJWT, async (req: any, res) => {
+    const user = await UsersService.findById(req.user.id);
+    if (!user) return res.status(404).json({ success: false, error: 'Usuário não encontrado' });
+    res.json({
+        success: true,
+        user: {
+            _id: (user as any)._id,
+            username: user.username,
+            name: user.name,
+            avatar: (user as any).avatar ?? null,
+        },
+    });
+});
 
+router.patch('/avatar', authenticateJWT, async (req: any, res) => {
+    const { avatar } = req.body as { avatar: string | null };
+    if (avatar !== null && avatar !== undefined && typeof avatar !== 'string') {
+        return res.status(400).json({ success: false, error: 'Avatar inválido' });
+    }
+    if (avatar && !avatar.startsWith('data:image/')) {
+        return res.status(400).json({ success: false, error: 'Formato de imagem inválido' });
+    }
+    await UsersService.updateAvatar(req.user.id, avatar ?? null);
+    res.json({ success: true });
+});
+
+// Status is managed via socket (status:change event), not REST.
 router.patch('/status', authenticateJWT, async (req: any, res) => {
     const { status } = req.body as { status: UserStatus };
     const valid: UserStatus[] = ['online', 'offline', 'ausente', 'ocupado'];

@@ -10,6 +10,10 @@ class UsersRepository {
     return await User.findByIdAndUpdate(id, { status }, { new: true });
   }
 
+  async updateAvatar(id: string, avatar: string | null) {
+    return await User.findByIdAndUpdate(id, { avatar }, { new: true }).select('-password');
+  }
+
   async findAll() {
     return await User.find();
   }
