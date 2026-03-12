@@ -38,17 +38,25 @@ async function start() {
       console.log('No MONGODB_URI provided, skipping database connection');
     }
 
-    initSocket(httpServer);
+    const io = initSocket(httpServer);
     registerChatHandlers();
+
+    // rastreia conexões HTTP abertas para destruí-las no shutdown
+    const connections = new Set<any>();
+    httpServer.on('connection', (conn) => {
+      connections.add(conn);
+      conn.on('close', () => connections.delete(conn));
+    });
 
     httpServer.listen(port, () => {
       console.log(`Server is running on port ${port}`);
     });
 
     const shutdown = () => {
-      httpServer.close(() => {
-        mongoose.connection.close().then(() => process.exit(0));
-      });
+      io.close();
+      connections.forEach((conn) => conn.destroy());
+      httpServer.close();
+      process.exit(0);
     };
 
     process.on('SIGTERM', shutdown);

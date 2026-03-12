@@ -8,7 +8,11 @@ class AuthService {
       return {
         success: true,
         token,
-        user: safeUser,
+        user: {
+          id: (safeUser._id ?? safeUser.id)?.toString(),
+          username: safeUser.username,
+          name: safeUser.name,
+        },
       };
     } catch (error: any) {
       console.error('Error during login:', error);

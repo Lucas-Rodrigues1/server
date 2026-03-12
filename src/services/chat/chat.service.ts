@@ -13,7 +13,11 @@ class ChatService {
   async getConversation(conversationId: string, userId: string) {
     const conv = await ConversationRepository.findById(conversationId);
     if (!conv) return null;
-    const isMember = conv.participants.some(p => p.toString() === userId);
+    // Handle both raw ObjectId and populated objects safely
+    const isMember = conv.participants.some((p: any) => {
+      const id = p?._id ?? p;
+      return id?.toString() === userId;
+    });
     return isMember ? conv : null;
   }
 

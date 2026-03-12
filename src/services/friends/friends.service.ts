@@ -24,7 +24,10 @@ class FriendsService {
       return { success: false, error: 'Solicitação já foi processada' };
     }
     const updated = await FriendshipRepository.updateStatus(friendshipId, 'accepted');
+    // Notify the requester that their invite was accepted
     emitTriggerTo(friendship.requester.toString(), 'friend:accepted', { friendshipId, acceptedBy: userId });
+    // Also notify the accepter so their own friends list / conversations update via socket
+    emitTriggerTo(userId, 'friend:accepted', { friendshipId, acceptedBy: userId });
     return { success: true, friendship: updated };
   }
 

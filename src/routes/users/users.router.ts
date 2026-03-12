@@ -3,6 +3,7 @@ import UsersController from "../../controllers/users/users.controller";
 import UsersService from "../../services/users/users.service";
 import { authenticateJWT } from "../../middlewares/auth";
 import { CreateUserDTO } from "../../dtos/createUser.dto";
+import { UserStatus } from "../../schemas/user.schema";
 
 const router = Router();
 
@@ -36,8 +37,6 @@ router.get('/search', authenticateJWT, async (req: any, res) => {
 });
 
 // Status is managed via socket (status:change event), not REST.
-// This endpoint allows HTTP fallback e.g. on page load.
-import { UserStatus } from '../../schemas/user.schema';
 
 router.patch('/status', authenticateJWT, async (req: any, res) => {
     const { status } = req.body as { status: UserStatus };
