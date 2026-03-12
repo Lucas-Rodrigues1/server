@@ -1,14 +1,14 @@
-import { Conversation } from '../schemas/conversation.schema';
+﻿import { Conversation } from '../schemas/conversation.schema';
 
 class ConversationRepository {
   async findOrCreate(userA: string, userB: string) {
     const existing = await Conversation.findOne({
       participants: { $all: [userA, userB], $size: 2 },
       deletedBy: { $nin: [userA] },
-    }).populate('participants', 'username name status');
+    }).populate('participants', 'username name status avatar');
     if (existing) return existing;
     const created = await Conversation.create({ participants: [userA, userB] });
-    return await Conversation.findById(created._id).populate('participants', 'username name status');
+    return await Conversation.findById(created._id).populate('participants', 'username name status avatar');
   }
 
   async findByUser(userId: string) {
@@ -16,7 +16,7 @@ class ConversationRepository {
       participants: userId,
       deletedBy: { $nin: [userId] },
     })
-      .populate('participants', 'username name status')
+      .populate('participants', 'username name status avatar')
       .populate('lastMessage')
       .sort({ updatedAt: -1 });
   }
