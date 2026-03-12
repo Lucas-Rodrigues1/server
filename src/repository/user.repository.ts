@@ -17,6 +17,13 @@ class UsersRepository {
   async findById(id: string) {
     return await User.findById(id);
   }
+
+  async search(query: string, excludeId: string) {
+    return await User.find(
+      { username: { $regex: query, $options: 'i' }, _id: { $ne: excludeId } },
+      { password: 0 },
+    ).limit(10);
+  }
 }
 
 export default new UsersRepository();

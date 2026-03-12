@@ -6,7 +6,10 @@ import cors from 'cors';
 import passport from './middlewares/passport';
 import authRoutes from './routes/auth/auth.routes';
 import usersRoutes from './routes/users/users.router';
+import friendsRoutes from './routes/friends/friends.routes';
+import chatRoutes from './routes/chat/chat.routes';
 import { initSocket } from './socket';
+import { registerChatHandlers } from './sockets/chat.socket';
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -23,6 +26,8 @@ app.use(passport.initialize());
 
 app.use('/auth', authRoutes);
 app.use('/users', usersRoutes);
+app.use('/friends', friendsRoutes);
+app.use('/chat', chatRoutes);
 
 async function start() {
   try {
@@ -34,6 +39,7 @@ async function start() {
     }
 
     initSocket(httpServer);
+    registerChatHandlers();
 
     httpServer.listen(port, () => {
       console.log(`Server is running on port ${port}`);

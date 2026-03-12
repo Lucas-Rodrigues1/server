@@ -34,6 +34,10 @@ class UsersService {
     async verifyPassword(user: any, plain: string) {
         return await bcrypt.compare(plain, user.password);
     }
+
+    async search(query: string, excludeId: string) {
+        return await UsersRepository.search(query, excludeId);
+    }
 }
 
 export default new UsersService();

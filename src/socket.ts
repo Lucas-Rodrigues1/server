@@ -45,7 +45,9 @@ export function initSocket(httpServer: HTTPServer): SocketIOServer {
   });
 
   io.on('connection', (socket: Socket) => {
-    console.log(`[Socket] Connected: ${socket.id}`);
+    const user = (socket as any).user;
+    socket.join(user.id);
+    console.log(`[Socket] Connected: ${socket.id} (user: ${user.username})`);
 
     socket.on('trigger-event', ({ event, data }: TriggerPayload) => {
       const handler = handlers.get(event);

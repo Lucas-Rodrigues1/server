@@ -1,5 +1,7 @@
 import { Router } from "express";
 import UsersController from "../../controllers/users/users.controller";
+import UsersService from "../../services/users/users.service";
+import { authenticateJWT } from "../../middlewares/auth";
 import { CreateUserDTO } from "../../dtos/createUser.dto";
 
 const router = Router();
@@ -24,6 +26,13 @@ router.post("/create", async (req, res) => {
     }
     
     res.status(201).json(result);
+});
+
+router.get('/search', authenticateJWT, async (req: any, res) => {
+    const q = (req.query.q as string)?.trim();
+    if (!q) return res.status(400).json({ success: false, error: 'Parâmetro q é obrigatório' });
+    const users = await UsersService.search(q, req.user.id);
+    res.json({ success: true, users });
 });
 
 export default router;
