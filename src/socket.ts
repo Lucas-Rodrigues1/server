@@ -1,6 +1,9 @@
 import { Server as HTTPServer } from 'http';
 import { Server as SocketIOServer, Socket } from 'socket.io';
 import { verifyJWT } from './middlewares/jwt';
+import UsersService from './services/users/users.service';
+import FriendshipRepository from './repository/friendship.repository';
+import { UserStatus } from './schemas/user.schema';
 
 export interface TriggerPayload<T = unknown> {
   event: string;
@@ -35,10 +38,16 @@ export function initSocket(httpServer: HTTPServer): SocketIOServer {
 
   io.use((socket, next) => {
     const token = socket.handshake.auth?.token as string | undefined;
-    if (!token) return next(new Error('Unauthorized: token não fornecido'));
+    if (!token) {
+      console.warn(`[Socket] Conexão recusada: token não fornecido (${socket.id})`);
+      return next(new Error('Unauthorized: token não fornecido'));
+    }
 
     const payload = verifyJWT(token);
-    if (!payload) return next(new Error('Unauthorized: token inválido ou expirado'));
+    if (!payload) {
+      console.warn(`[Socket] Conexão recusada: token inválido (${socket.id})`);
+      return next(new Error('Unauthorized: token inválido ou expirado'));
+    }
 
     (socket as any).user = payload;
     next();
@@ -48,6 +57,11 @@ export function initSocket(httpServer: HTTPServer): SocketIOServer {
     const user = (socket as any).user;
     socket.join(user.id);
     console.log(`[Socket] Connected: ${socket.id} (user: ${user.username})`);
+
+    // Mark user as online and notify friends
+    UsersService.updateStatus(user.id, 'online').then(() => {
+      broadcastStatusToFriends(user.id, 'online', user.username);
+    });
 
     socket.on('trigger-event', ({ event, data }: TriggerPayload) => {
       const handler = handlers.get(event);
@@ -60,6 +74,9 @@ export function initSocket(httpServer: HTTPServer): SocketIOServer {
 
     socket.on('disconnect', () => {
       console.log(`[Socket] Disconnected: ${socket.id}`);
+      UsersService.updateStatus(user.id, 'offline').then(() => {
+        broadcastStatusToFriends(user.id, 'offline', user.username);
+      });
     });
   });
 
@@ -69,4 +86,17 @@ export function initSocket(httpServer: HTTPServer): SocketIOServer {
 export function getIO(): SocketIOServer {
   if (!io) throw new Error('Socket.io não foi inicializado. Chame initSocket primeiro.');
   return io;
+}
+
+async function broadcastStatusToFriends(userId: string, status: UserStatus, username: string) {
+  const friendships = await FriendshipRepository.findAccepted(userId);
+  const payload = { userId, username, status };
+  for (const f of friendships) {
+    const friendId = (f.requester as any)._id?.toString() === userId
+      ? (f.recipient as any)._id?.toString()
+      : (f.requester as any)._id?.toString();
+    if (friendId) {
+      getIO().to(friendId).emit('trigger-event', { event: 'user:status', data: payload });
+    }
+  }
 }

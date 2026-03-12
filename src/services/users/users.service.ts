@@ -1,5 +1,6 @@
 import UsersRepository from '../../repository/user.repository';
 import { CreateUserDTO } from '../../dtos/createUser.dto';
+import { UserStatus } from '../../schemas/user.schema';
 import bcrypt from 'bcrypt';
 
 
@@ -37,6 +38,10 @@ class UsersService {
 
     async search(query: string, excludeId: string) {
         return await UsersRepository.search(query, excludeId);
+    }
+
+    async updateStatus(id: string, status: UserStatus) {
+        return await UsersRepository.updateStatus(id, status);
     }
 }
 

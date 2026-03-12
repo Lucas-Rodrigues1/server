@@ -1,9 +1,13 @@
 import { CreateUserDTO } from "../dtos/createUser.dto";
-import { User } from "../schemas/user.schema";
+import { User, UserStatus } from "../schemas/user.schema";
 
 class UsersRepository {
  async create(data:CreateUserDTO) {
     return await User.create(data);
+  }
+
+  async updateStatus(id: string, status: UserStatus) {
+    return await User.findByIdAndUpdate(id, { status }, { new: true });
   }
 
   async findAll() {

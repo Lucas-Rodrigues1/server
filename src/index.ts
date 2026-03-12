@@ -44,6 +44,15 @@ async function start() {
     httpServer.listen(port, () => {
       console.log(`Server is running on port ${port}`);
     });
+
+    const shutdown = () => {
+      httpServer.close(() => {
+        mongoose.connection.close().then(() => process.exit(0));
+      });
+    };
+
+    process.on('SIGTERM', shutdown);
+    process.on('SIGINT', shutdown);
   } catch (err) {
     console.error('Failed to start server', err);
     process.exit(1);

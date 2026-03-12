@@ -35,4 +35,16 @@ router.get('/search', authenticateJWT, async (req: any, res) => {
     res.json({ success: true, users });
 });
 
+// Status is managed via socket (status:change event), not REST.
+// This endpoint allows HTTP fallback e.g. on page load.
+import { UserStatus } from '../../schemas/user.schema';
+
+router.patch('/status', authenticateJWT, async (req: any, res) => {
+    const { status } = req.body as { status: UserStatus };
+    const valid: UserStatus[] = ['online', 'offline', 'ausente', 'ocupado'];
+    if (!valid.includes(status)) return res.status(400).json({ success: false, error: 'Status inválido' });
+    await UsersService.updateStatus(req.user.id, status);
+    res.json({ success: true });
+});
+
 export default router;

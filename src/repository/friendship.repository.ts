@@ -20,7 +20,7 @@ class FriendshipRepository {
 
   async findPendingReceived(userId: string) {
     return await Friendship.find({ recipient: userId, status: 'pending' })
-      .populate('requester', 'username name');
+      .populate('requester', 'username name status');
   }
 
   async findAccepted(userId: string) {
@@ -28,8 +28,8 @@ class FriendshipRepository {
       $or: [{ requester: userId }, { recipient: userId }],
       status: 'accepted',
     })
-      .populate('requester', 'username name')
-      .populate('recipient', 'username name');
+      .populate('requester', 'username name status')
+      .populate('recipient', 'username name status');
   }
 
   async updateStatus(id: string, status: IFriendship['status']) {
