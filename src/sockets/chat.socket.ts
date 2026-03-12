@@ -1,4 +1,4 @@
-import { onTrigger, emitTriggerTo } from '../socket';
+﻿import { onTrigger, emitTriggerTo } from '../socket';
 import ChatService from '../services/chat/chat.service';
 import UsersService from '../services/users/users.service';
 import FriendshipRepository from '../repository/friendship.repository';
@@ -16,6 +16,10 @@ interface TypingData {
 
 interface StatusChangeData {
   status: UserStatus;
+}
+
+interface ReadMessageData {
+  conversationId: string;
 }
 
 export function registerChatHandlers() {
@@ -59,6 +63,18 @@ export function registerChatHandlers() {
       .find(p => p.toString() !== user.id)?.toString();
     if (recipientId) {
       emitTriggerTo(recipientId, 'typing:stop', { conversationId, userId: user.id });
+    }
+  });
+
+  onTrigger<ReadMessageData>('message:read', async (socket, data) => {
+    const user = (socket as any).user;
+    const { conversationId } = data;
+    const conversation = await ChatService.getConversation(conversationId, user.id);
+    if (!conversation) return;
+    const recipientId = conversation.participants
+      .find(p => p.toString() !== user.id)?.toString();
+    if (recipientId) {
+      emitTriggerTo(recipientId, 'message:read', { conversationId });
     }
   });
 
