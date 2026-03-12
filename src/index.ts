@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import express, { Request, Response } from 'express';
 import mongoose from 'mongoose';
+import cors from 'cors';
 import passport from './middlewares/passport';
 import authRoutes from './routes/auth/auth.routes';
 import usersRoutes from './routes/users/users.router';
@@ -8,6 +9,11 @@ import usersRoutes from './routes/users/users.router';
 const app = express();
 const port = process.env.PORT || 3000;
 
+app.use(cors({
+  origin: process.env.CORS_ORIGIN || '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 app.use(express.json());
 
 app.use(passport.initialize());
