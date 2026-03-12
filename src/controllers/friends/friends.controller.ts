@@ -12,19 +12,19 @@ class FriendsController {
 
   async acceptRequest(req: Request, res: Response) {
     const user = (req as any).user;
-    const result = await FriendsService.acceptRequest(req.params.id, user.id);
+    const result = await FriendsService.acceptRequest(req.params.id as string, user.id);
     return res.status(result.success ? 200 : 400).json(result);
   }
 
   async rejectRequest(req: Request, res: Response) {
     const user = (req as any).user;
-    const result = await FriendsService.rejectRequest(req.params.id, user.id);
+    const result = await FriendsService.rejectRequest(req.params.id as string, user.id);
     return res.status(result.success ? 200 : 400).json(result);
   }
 
   async removeFriend(req: Request, res: Response) {
     const user = (req as any).user;
-    const result = await FriendsService.removeFriend(req.params.id, user.id);
+    const result = await FriendsService.removeFriend(req.params.id as string, user.id);
     return res.status(result.success ? 200 : 400).json(result);
   }
 
