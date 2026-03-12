@@ -1,21 +1,22 @@
+import 'dotenv/config';
 import express, { Request, Response } from 'express';
 import mongoose from 'mongoose';
-import router from './routes/users/users.router';
-import 'dotenv/config';
+import passport from './middlewares/passport';
+import authRoutes from './routes/auth/auth.routes';
+import usersRoutes from './routes/users/users.router';
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
-app.use('/users', router);
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello TypeScript world!');
-});
+app.use(passport.initialize());
+
+app.use('/auth', authRoutes);
+app.use('/users', usersRoutes);
 
 async function start() {
   try {
-    // Example MongoDB connection, adjust URI as needed
     if (process.env.MONGODB_URI) {
       await mongoose.connect(process.env.MONGODB_URI);
       console.log('Connected to MongoDB');

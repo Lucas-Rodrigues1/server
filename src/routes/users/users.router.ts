@@ -15,9 +15,15 @@ router.post("/create", async (req, res) => {
         return;
     }
     const result = await UsersController.create({ name, username, password });
-    res.json(result);
+    
+    if (!(result as any).success) {
+        const isDuplicateError = (result as any).errorDetails?.includes('E11000');
+        const statusCode = isDuplicateError ? 409 : 400;
+        res.status(statusCode).json(result);
+        return;
+    }
+    
+    res.status(201).json(result);
 });
-
-
 
 export default router;
