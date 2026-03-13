@@ -24,6 +24,10 @@ app.use(express.json({ limit: '5mb' }));
 
 app.use(passport.initialize());
 
+app.get('/health', (_req: Request, res: Response) => {
+  res.status(200).json({ status: 'ok' });
+});
+
 app.use('/auth', authRoutes);
 app.use('/users', usersRoutes);
 app.use('/friends', friendsRoutes);
@@ -41,7 +45,6 @@ async function start() {
     const io = initSocket(httpServer);
     registerChatHandlers();
 
-    // rastreia conexões HTTP abertas para destruí-las no shutdown
     const connections = new Set<any>();
     httpServer.on('connection', (conn) => {
       connections.add(conn);
@@ -50,6 +53,17 @@ async function start() {
 
     httpServer.listen(port, () => {
       console.log(`Server is running on port ${port}`);
+
+      // Ping próprio a cada 5 minutos para manter o serviço ativo no Render
+      const selfUrl = process.env.RENDER_EXTERNAL_URL || `http://localhost:${port}`;
+      setInterval(async () => {
+        try {
+          const res = await fetch(`${selfUrl}/health`);
+          console.log(`Health check: ${res.status}`);
+        } catch (err) {
+          console.error('Health check failed:', err);
+        }
+      }, 5 * 60 * 1000);
     });
 
     const shutdown = () => {
