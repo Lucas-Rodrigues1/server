@@ -13,7 +13,25 @@ class ChatController {
   async listConversations(req: Request, res: Response) {
     const user = (req as any).user;
     const conversations = await ChatService.listConversations(user.id);
-    return res.json({ success: true, conversations });
+    const result = conversations.map((c: any) => {
+      const obj = c.toObject();
+      const m = c.unreadCounts;
+      obj.unreadCount = m ? (typeof m.get === 'function' ? m.get(user.id) ?? 0 : m[user.id] ?? 0) : 0;
+      return obj;
+    });
+    return res.json({ success: true, conversations: result });
+  }
+
+  async listArchivedConversations(req: Request, res: Response) {
+    const user = (req as any).user;
+    const conversations = await ChatService.listArchivedConversations(user.id);
+    const result = conversations.map((c: any) => {
+      const obj = c.toObject();
+      const m = c.unreadCounts;
+      obj.unreadCount = m ? (typeof m.get === 'function' ? m.get(user.id) ?? 0 : m[user.id] ?? 0) : 0;
+      return obj;
+    });
+    return res.json({ success: true, conversations: result });
   }
 
   async getMessages(req: Request, res: Response) {

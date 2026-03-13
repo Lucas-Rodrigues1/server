@@ -50,6 +50,33 @@ class ConversationRepository {
       { new: true },
     );
   }
+
+  async findArchivedByUser(userId: string) {
+    return await Conversation.find({
+      participants: userId,
+      archivedBy: userId,
+      deletedBy: { $nin: [userId] },
+    })
+      .populate('participants', 'username name status avatar')
+      .populate('lastMessage')
+      .sort({ updatedAt: -1 });
+  }
+
+  async incrementUnread(conversationId: string, userId: string) {
+    return await Conversation.findByIdAndUpdate(
+      conversationId,
+      { $inc: { [`unreadCounts.${userId}`]: 1 } },
+      { new: true },
+    );
+  }
+
+  async resetUnread(conversationId: string, userId: string) {
+    return await Conversation.findByIdAndUpdate(
+      conversationId,
+      { $set: { [`unreadCounts.${userId}`]: 0 } },
+      { new: true },
+    );
+  }
 }
 
 export default new ConversationRepository();

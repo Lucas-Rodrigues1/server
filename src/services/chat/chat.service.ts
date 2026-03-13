@@ -1,4 +1,4 @@
-import ConversationRepository from '../../repository/conversation.repository';
+﻿import ConversationRepository from '../../repository/conversation.repository';
 import MessageRepository from '../../repository/message.repository';
 
 class ChatService {
@@ -10,10 +10,13 @@ class ChatService {
     return await ConversationRepository.findByUser(userId);
   }
 
+  async listArchivedConversations(userId: string) {
+    return await ConversationRepository.findArchivedByUser(userId);
+  }
+
   async getConversation(conversationId: string, userId: string) {
     const conv = await ConversationRepository.findById(conversationId);
     if (!conv) return null;
-    // Handle both raw ObjectId and populated objects safely
     const isMember = conv.participants.some((p: any) => {
       const id = p?._id ?? p;
       return id?.toString() === userId;
@@ -31,6 +34,14 @@ class ChatService {
     const conv = await this.getConversation(conversationId, userId);
     if (!conv) return null;
     return await MessageRepository.findByConversation(conversationId, limit, before);
+  }
+
+  async incrementUnread(conversationId: string, userId: string) {
+    return await ConversationRepository.incrementUnread(conversationId, userId);
+  }
+
+  async resetUnread(conversationId: string, userId: string) {
+    return await ConversationRepository.resetUnread(conversationId, userId);
   }
 
   async archiveConversation(conversationId: string, userId: string) {

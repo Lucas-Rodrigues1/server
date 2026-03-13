@@ -71,6 +71,7 @@ export function registerChatHandlers() {
     const { conversationId } = data;
     const conversation = await ChatService.getConversation(conversationId, user.id);
     if (!conversation) return;
+    await ChatService.resetUnread(conversationId, user.id);
     const recipientId = conversation.participants
       .find(p => p.toString() !== user.id)?.toString();
     if (recipientId) {
@@ -110,6 +111,7 @@ export function registerChatHandlers() {
 
     if (recipientId) {
       emitTriggerTo(recipientId, 'message:new', payload);
+      await ChatService.incrementUnread(conversationId, recipientId);
     }
 
     socket.emit('trigger-event', { event: 'message:ack', data: payload });
