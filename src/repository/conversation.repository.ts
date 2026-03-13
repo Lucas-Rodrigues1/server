@@ -15,6 +15,7 @@ class ConversationRepository {
     return await Conversation.find({
       participants: userId,
       deletedBy: { $nin: [userId] },
+      archivedBy: { $nin: [userId] },
     })
       .populate('participants', 'username name status avatar')
       .populate('lastMessage')
