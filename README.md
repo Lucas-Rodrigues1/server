@@ -40,7 +40,6 @@ Crie um arquivo `.env` na raiz do projeto:
 PORT=3000
 MONGODB_URI=mongodb://localhost:27017/chat-app
 JWT_SECRET=sua_chave_secreta_aqui
-CORS_ORIGIN=*
 RENDER_EXTERNAL_URL=https://seu-dominio.com
 ```
 
@@ -49,7 +48,6 @@ RENDER_EXTERNAL_URL=https://seu-dominio.com
 | `PORT` | Não | Porta do servidor (padrão: 3000) |
 | `MONGODB_URI` | Sim | String de conexão do MongoDB |
 | `JWT_SECRET` | Sim | Chave secreta para assinar tokens JWT |
-| `CORS_ORIGIN` | Não | Origem permitida para CORS (padrão: `*`) |
 | `RENDER_EXTERNAL_URL` | Não | URL externa para health check automático |
 
 ## 🚀 Rodando Localmente
