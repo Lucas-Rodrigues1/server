@@ -35,6 +35,8 @@ export function initSocket(httpServer: HTTPServer): SocketIOServer {
       methods: ['GET', 'POST'],
       credentials: true,
     },
+    transports: ['polling', 'websocket'],
+    allowUpgrades: true,
     maxHttpBufferSize: 5e6, // 5MB for image messages
   });
 
