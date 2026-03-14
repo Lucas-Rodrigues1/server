@@ -1,0 +1,679 @@
+{
+	"info": {
+		"_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+		"name": "Chat API - server",
+		"description": "Coleção completa da API de chat com autenticação, gerenciamento de usuários, amizades e conversas.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://server-6kij.onrender.com",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"item": [
+		{
+			"name": "Health",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/health",
+							"host": ["{{baseUrl}}"],
+							"path": ["health"]
+						},
+						"description": "Verifica se a API está online."
+					},
+					"response": [
+						{
+							"name": "200 - OK",
+							"status": "OK",
+							"code": 200,
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"body": "{\n  \"status\": \"ok\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.token) {",
+									"    pm.collectionVariables.set('token', jsonData.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": { "type": "noauth" },
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"lucas\",\n  \"password\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["auth", "login"]
+						},
+						"description": "Autentica o usuário e retorna um token JWT. O token é salvo automaticamente na variável `token` da coleção."
+					},
+					"response": [
+						{
+							"name": "200 - Login bem-sucedido",
+							"status": "OK",
+							"code": 200,
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"body": "{\n  \"success\": true,\n  \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n  \"user\": {\n    \"id\": \"665a1b2c3d4e5f6a7b8c9d0e\",\n    \"username\": \"lucas\",\n    \"name\": \"Lucas\"\n  }\n}"
+						},
+						{
+							"name": "401 - Credenciais inválidas",
+							"status": "Unauthorized",
+							"code": 401,
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"body": "{\n  \"success\": false,\n  \"message\": \"Authentication failed\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/auth/profile",
+							"host": ["{{baseUrl}}"],
+							"path": ["auth", "profile"]
+						},
+						"description": "Retorna o perfil do usuário autenticado (sem o campo password)."
+					},
+					"response": [
+						{
+							"name": "200 - Perfil retornado",
+							"status": "OK",
+							"code": 200,
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"body": "{\n  \"success\": true,\n  \"user\": {\n    \"_id\": \"665a1b2c3d4e5f6a7b8c9d0e\",\n    \"username\": \"lucas\",\n    \"name\": \"Lucas\",\n    \"status\": \"online\",\n    \"avatar\": null,\n    \"__v\": 0\n  }\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Create User",
+					"request": {
+						"auth": { "type": "noauth" },
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Lucas Silva\",\n  \"username\": \"lucas\",\n  \"password\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/create",
+							"host": ["{{baseUrl}}"],
+							"path": ["users", "create"]
+						},
+						"description": "Cria um novo usuário. Não requer autenticação."
+					},
+					"response": [
+						{
+							"name": "201 - Usuário criado",
+							"status": "Created",
+							"code": 201,
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"body": "{\n  \"success\": true,\n  \"user\": {\n    \"_id\": \"665a1b2c3d4e5f6a7b8c9d0e\",\n    \"username\": \"lucas\",\n    \"name\": \"Lucas Silva\",\n    \"status\": \"offline\",\n    \"avatar\": null\n  }\n}"
+						},
+						{
+							"name": "400 - Campos obrigatórios faltando",
+							"status": "Bad Request",
+							"code": 400,
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"body": "{\n  \"error\": \"Missing required fields: name, username, password\"\n}"
+						},
+						{
+							"name": "409 - Username já existe",
+							"status": "Conflict",
+							"code": 409,
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"body": "{\n  \"error\": \"Failed to create user\",\n  \"errorDetails\": \"E11000 duplicate key error...\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Search Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/search?q=lucas",
+							"host": ["{{baseUrl}}"],
+							"path": ["users", "search"],
+							"query": [
+								{ "key": "q", "value": "lucas", "description": "Texto de busca (username ou name)" }
+							]
+						},
+						"description": "Busca usuários pelo nome ou username. Requer autenticação. Exclui o próprio usuário dos resultados."
+					},
+					"response": [
+						{
+							"name": "200 - Resultados encontrados",
+							"status": "OK",
+							"code": 200,
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"body": "{\n  \"success\": true,\n  \"users\": [\n    {\n      \"_id\": \"665a1b2c3d4e5f6a7b8c9d0e\",\n      \"username\": \"lucas\",\n      \"name\": \"Lucas Silva\",\n      \"avatar\": null\n    }\n  ]\n}"
+						},
+						{
+							"name": "400 - Parâmetro q ausente",
+							"status": "Bad Request",
+							"code": 400,
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"body": "{\n  \"success\": false,\n  \"error\": \"Parâmetro q é obrigatório\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Me",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/me",
+							"host": ["{{baseUrl}}"],
+							"path": ["users", "me"]
+						},
+						"description": "Retorna os dados do usuário autenticado (id, username, name, avatar)."
+					},
+					"response": [
+						{
+							"name": "200 - Usuário encontrado",
+							"status": "OK",
+							"code": 200,
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"body": "{\n  \"success\": true,\n  \"user\": {\n    \"_id\": \"665a1b2c3d4e5f6a7b8c9d0e\",\n    \"username\": \"lucas\",\n    \"name\": \"Lucas Silva\",\n    \"avatar\": null\n  }\n}"
+						},
+						{
+							"name": "404 - Usuário não encontrado",
+							"status": "Not Found",
+							"code": 404,
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"body": "{\n  \"success\": false,\n  \"error\": \"Usuário não encontrado\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Update Avatar",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"avatar\": \"data:image/png;base64,iVBORw0KGgoAAAANSUhEUg...\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/avatar",
+							"host": ["{{baseUrl}}"],
+							"path": ["users", "avatar"]
+						},
+						"description": "Atualiza o avatar do usuário autenticado. Envie uma string base64 de imagem ou null para remover."
+					},
+					"response": [
+						{
+							"name": "200 - Avatar atualizado",
+							"status": "OK",
+							"code": 200,
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"body": "{\n  \"success\": true\n}"
+						},
+						{
+							"name": "400 - Formato inválido",
+							"status": "Bad Request",
+							"code": 400,
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"body": "{\n  \"success\": false,\n  \"error\": \"Formato de imagem inválido\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Update Status",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"online\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/status",
+							"host": ["{{baseUrl}}"],
+							"path": ["users", "status"]
+						},
+						"description": "Atualiza o status do usuário. Valores válidos: online, offline, ausente, ocupado."
+					},
+					"response": [
+						{
+							"name": "200 - Status atualizado",
+							"status": "OK",
+							"code": 200,
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"body": "{\n  \"success\": true\n}"
+						},
+						{
+							"name": "400 - Status inválido",
+							"status": "Bad Request",
+							"code": 400,
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"body": "{\n  \"success\": false,\n  \"error\": \"Status inválido\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Friends",
+			"item": [
+				{
+					"name": "Send Friend Request",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"recipientId\": \"665a1b2c3d4e5f6a7b8c9d0f\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/friends/request",
+							"host": ["{{baseUrl}}"],
+							"path": ["friends", "request"]
+						},
+						"description": "Envia uma solicitação de amizade. Requer autenticação."
+					},
+					"response": [
+						{
+							"name": "200 - Solicitação enviada",
+							"status": "OK",
+							"code": 200,
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"body": "{\n  \"success\": true,\n  \"friendship\": {\n    \"_id\": \"665b2c3d4e5f6a7b8c9d0e1f\",\n    \"requester\": \"665a1b2c3d4e5f6a7b8c9d0e\",\n    \"recipient\": \"665a1b2c3d4e5f6a7b8c9d0f\",\n    \"status\": \"pending\",\n    \"createdAt\": \"2025-06-01T12:00:00.000Z\",\n    \"updatedAt\": \"2025-06-01T12:00:00.000Z\"\n  }\n}"
+						},
+						{
+							"name": "400 - recipientId ausente",
+							"status": "Bad Request",
+							"code": 400,
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"body": "{\n  \"success\": false,\n  \"error\": \"recipientId é obrigatório\"\n}"
+						}
+					]
+				},
+				{
+					"name": "List Friend Requests",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/friends/requests",
+							"host": ["{{baseUrl}}"],
+							"path": ["friends", "requests"]
+						},
+						"description": "Lista todas as solicitações de amizade pendentes recebidas pelo usuário autenticado."
+					},
+					"response": [
+						{
+							"name": "200 - Lista de solicitações",
+							"status": "OK",
+							"code": 200,
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"body": "{\n  \"success\": true,\n  \"requests\": [\n    {\n      \"_id\": \"665b2c3d4e5f6a7b8c9d0e1f\",\n      \"requester\": {\n        \"_id\": \"665a1b2c3d4e5f6a7b8c9d0e\",\n        \"username\": \"lucas\",\n        \"name\": \"Lucas Silva\"\n      },\n      \"recipient\": \"665a1b2c3d4e5f6a7b8c9d0f\",\n      \"status\": \"pending\",\n      \"createdAt\": \"2025-06-01T12:00:00.000Z\",\n      \"updatedAt\": \"2025-06-01T12:00:00.000Z\"\n    }\n  ]\n}"
+						}
+					]
+				},
+				{
+					"name": "List Friends",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/friends",
+							"host": ["{{baseUrl}}"],
+							"path": ["friends"]
+						},
+						"description": "Lista todos os amigos do usuário autenticado."
+					},
+					"response": [
+						{
+							"name": "200 - Lista de amigos",
+							"status": "OK",
+							"code": 200,
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"body": "{\n  \"success\": true,\n  \"friends\": [\n    {\n      \"_id\": \"665b2c3d4e5f6a7b8c9d0e1f\",\n      \"requester\": {\n        \"_id\": \"665a1b2c3d4e5f6a7b8c9d0e\",\n        \"username\": \"lucas\",\n        \"name\": \"Lucas Silva\",\n        \"status\": \"online\",\n        \"avatar\": null\n      },\n      \"recipient\": {\n        \"_id\": \"665a1b2c3d4e5f6a7b8c9d0f\",\n        \"username\": \"maria\",\n        \"name\": \"Maria Santos\",\n        \"status\": \"offline\",\n        \"avatar\": null\n      },\n      \"status\": \"accepted\",\n      \"createdAt\": \"2025-06-01T12:00:00.000Z\",\n      \"updatedAt\": \"2025-06-01T12:05:00.000Z\"\n    }\n  ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Accept Friend Request",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/friends/accept/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["friends", "accept", ":id"],
+							"variable": [
+								{ "key": "id", "value": "665b2c3d4e5f6a7b8c9d0e1f", "description": "ID da solicitação de amizade" }
+							]
+						},
+						"description": "Aceita uma solicitação de amizade pendente."
+					},
+					"response": [
+						{
+							"name": "200 - Solicitação aceita",
+							"status": "OK",
+							"code": 200,
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"body": "{\n  \"success\": true\n}"
+						},
+						{
+							"name": "400 - Solicitação inválida",
+							"status": "Bad Request",
+							"code": 400,
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"body": "{\n  \"success\": false,\n  \"error\": \"Solicitação não encontrada ou não pertence a você\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Reject Friend Request",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/friends/reject/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["friends", "reject", ":id"],
+							"variable": [
+								{ "key": "id", "value": "665b2c3d4e5f6a7b8c9d0e1f", "description": "ID da solicitação de amizade" }
+							]
+						},
+						"description": "Rejeita uma solicitação de amizade pendente."
+					},
+					"response": [
+						{
+							"name": "200 - Solicitação rejeitada",
+							"status": "OK",
+							"code": 200,
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"body": "{\n  \"success\": true\n}"
+						},
+						{
+							"name": "400 - Solicitação inválida",
+							"status": "Bad Request",
+							"code": 400,
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"body": "{\n  \"success\": false,\n  \"error\": \"Solicitação não encontrada ou não pertence a você\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Remove Friend",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/friends/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["friends", ":id"],
+							"variable": [
+								{ "key": "id", "value": "665b2c3d4e5f6a7b8c9d0e1f", "description": "ID da amizade" }
+							]
+						},
+						"description": "Remove um amigo da lista."
+					},
+					"response": [
+						{
+							"name": "200 - Amigo removido",
+							"status": "OK",
+							"code": 200,
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"body": "{\n  \"success\": true\n}"
+						},
+						{
+							"name": "400 - Amizade não encontrada",
+							"status": "Bad Request",
+							"code": 400,
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"body": "{\n  \"success\": false,\n  \"error\": \"Amizade não encontrada\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Chat",
+			"item": [
+				{
+					"name": "Start Conversation",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"friendId\": \"665a1b2c3d4e5f6a7b8c9d0f\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/chat/conversations",
+							"host": ["{{baseUrl}}"],
+							"path": ["chat", "conversations"]
+						},
+						"description": "Inicia ou retorna uma conversa existente com um amigo."
+					},
+					"response": [
+						{
+							"name": "200 - Conversa iniciada/retornada",
+							"status": "OK",
+							"code": 200,
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"body": "{\n  \"success\": true,\n  \"conversation\": {\n    \"_id\": \"665c3d4e5f6a7b8c9d0e1f2a\",\n    \"participants\": [\n      \"665a1b2c3d4e5f6a7b8c9d0e\",\n      \"665a1b2c3d4e5f6a7b8c9d0f\"\n    ],\n    \"archivedBy\": [],\n    \"deletedBy\": [],\n    \"unreadCounts\": {},\n    \"createdAt\": \"2025-06-01T12:10:00.000Z\",\n    \"updatedAt\": \"2025-06-01T12:10:00.000Z\"\n  }\n}"
+						},
+						{
+							"name": "400 - friendId ausente",
+							"status": "Bad Request",
+							"code": 400,
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"body": "{\n  \"success\": false,\n  \"error\": \"friendId é obrigatório\"\n}"
+						}
+					]
+				},
+				{
+					"name": "List Conversations",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/chat/conversations",
+							"host": ["{{baseUrl}}"],
+							"path": ["chat", "conversations"]
+						},
+						"description": "Lista todas as conversas ativas do usuário autenticado."
+					},
+					"response": [
+						{
+							"name": "200 - Lista de conversas",
+							"status": "OK",
+							"code": 200,
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"body": "{\n  \"success\": true,\n  \"conversations\": [\n    {\n      \"_id\": \"665c3d4e5f6a7b8c9d0e1f2a\",\n      \"participants\": [\n        {\n          \"_id\": \"665a1b2c3d4e5f6a7b8c9d0e\",\n          \"username\": \"lucas\",\n          \"name\": \"Lucas Silva\",\n          \"avatar\": null\n        },\n        {\n          \"_id\": \"665a1b2c3d4e5f6a7b8c9d0f\",\n          \"username\": \"maria\",\n          \"name\": \"Maria Santos\",\n          \"avatar\": null\n        }\n      ],\n      \"archivedBy\": [],\n      \"deletedBy\": [],\n      \"lastMessage\": {\n        \"_id\": \"665d4e5f6a7b8c9d0e1f2a3b\",\n        \"content\": \"Olá!\",\n        \"sender\": \"665a1b2c3d4e5f6a7b8c9d0e\",\n        \"createdAt\": \"2025-06-01T12:15:00.000Z\"\n      },\n      \"unreadCount\": 2,\n      \"createdAt\": \"2025-06-01T12:10:00.000Z\",\n      \"updatedAt\": \"2025-06-01T12:15:00.000Z\"\n    }\n  ]\n}"
+						}
+					]
+				},
+				{
+					"name": "List Archived Conversations",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/chat/conversations/archived",
+							"host": ["{{baseUrl}}"],
+							"path": ["chat", "conversations", "archived"]
+						},
+						"description": "Lista todas as conversas arquivadas do usuário autenticado."
+					},
+					"response": [
+						{
+							"name": "200 - Conversas arquivadas",
+							"status": "OK",
+							"code": 200,
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"body": "{\n  \"success\": true,\n  \"conversations\": [\n    {\n      \"_id\": \"665c3d4e5f6a7b8c9d0e1f2a\",\n      \"participants\": [\n        {\n          \"_id\": \"665a1b2c3d4e5f6a7b8c9d0e\",\n          \"username\": \"lucas\",\n          \"name\": \"Lucas Silva\"\n        }\n      ],\n      \"archivedBy\": [\"665a1b2c3d4e5f6a7b8c9d0e\"],\n      \"unreadCount\": 0,\n      \"createdAt\": \"2025-06-01T12:10:00.000Z\",\n      \"updatedAt\": \"2025-06-01T13:00:00.000Z\"\n    }\n  ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Messages",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/chat/conversations/:id/messages?limit=50",
+							"host": ["{{baseUrl}}"],
+							"path": ["chat", "conversations", ":id", "messages"],
+							"query": [
+								{ "key": "limit", "value": "50", "description": "Quantidade de mensagens (padrão: 50)" },
+								{ "key": "before", "value": "", "description": "ID da mensagem para paginação (cursor). Retorna mensagens anteriores a esta.", "disabled": true }
+							],
+							"variable": [
+								{ "key": "id", "value": "665c3d4e5f6a7b8c9d0e1f2a", "description": "ID da conversa" }
+							]
+						},
+						"description": "Retorna as mensagens de uma conversa com paginação por cursor."
+					},
+					"response": [
+						{
+							"name": "200 - Mensagens retornadas",
+							"status": "OK",
+							"code": 200,
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"body": "{\n  \"success\": true,\n  \"messages\": [\n    {\n      \"_id\": \"665d4e5f6a7b8c9d0e1f2a3b\",\n      \"conversation\": \"665c3d4e5f6a7b8c9d0e1f2a\",\n      \"sender\": {\n        \"_id\": \"665a1b2c3d4e5f6a7b8c9d0e\",\n        \"username\": \"lucas\",\n        \"name\": \"Lucas Silva\"\n      },\n      \"content\": \"Olá, tudo bem?\",\n      \"createdAt\": \"2025-06-01T12:15:00.000Z\",\n      \"updatedAt\": \"2025-06-01T12:15:00.000Z\"\n    },\n    {\n      \"_id\": \"665d4e5f6a7b8c9d0e1f2a3c\",\n      \"conversation\": \"665c3d4e5f6a7b8c9d0e1f2a\",\n      \"sender\": {\n        \"_id\": \"665a1b2c3d4e5f6a7b8c9d0f\",\n        \"username\": \"maria\",\n        \"name\": \"Maria Santos\"\n      },\n      \"content\": \"Tudo sim! E você?\",\n      \"createdAt\": \"2025-06-01T12:16:00.000Z\",\n      \"updatedAt\": \"2025-06-01T12:16:00.000Z\"\n    }\n  ]\n}"
+						},
+						{
+							"name": "404 - Conversa não encontrada",
+							"status": "Not Found",
+							"code": 404,
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"body": "{\n  \"success\": false,\n  \"error\": \"Conversa não encontrada\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Archive Conversation",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/chat/conversations/:id/archive",
+							"host": ["{{baseUrl}}"],
+							"path": ["chat", "conversations", ":id", "archive"],
+							"variable": [
+								{ "key": "id", "value": "665c3d4e5f6a7b8c9d0e1f2a", "description": "ID da conversa" }
+							]
+						},
+						"description": "Arquiva uma conversa para o usuário autenticado."
+					},
+					"response": [
+						{
+							"name": "200 - Conversa arquivada",
+							"status": "OK",
+							"code": 200,
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"body": "{\n  \"success\": true\n}"
+						},
+						{
+							"name": "404 - Conversa não encontrada",
+							"status": "Not Found",
+							"code": 404,
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"body": "{\n  \"success\": false,\n  \"error\": \"Conversa não encontrada\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete Conversation",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/chat/conversations/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["chat", "conversations", ":id"],
+							"variable": [
+								{ "key": "id", "value": "665c3d4e5f6a7b8c9d0e1f2a", "description": "ID da conversa" }
+							]
+						},
+						"description": "Deleta uma conversa para o usuário autenticado (soft delete)."
+					},
+					"response": [
+						{
+							"name": "200 - Conversa deletada",
+							"status": "OK",
+							"code": 200,
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"body": "{\n  \"success\": true\n}"
+						},
+						{
+							"name": "404 - Conversa não encontrada",
+							"status": "Not Found",
+							"code": 404,
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"body": "{\n  \"success\": false,\n  \"error\": \"Conversa não encontrada\"\n}"
+						}
+					]
+				}
+			]
+		}
+	]
+}

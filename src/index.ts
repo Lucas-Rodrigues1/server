@@ -37,9 +37,7 @@ async function start() {
   try {
     if (process.env.MONGODB_URI) {
       await mongoose.connect(process.env.MONGODB_URI);
-      console.log('Connected to MongoDB');
     } else {
-      console.log('No MONGODB_URI provided, skipping database connection');
     }
 
     const io = initSocket(httpServer);
@@ -52,14 +50,11 @@ async function start() {
     });
 
     httpServer.listen(port, () => {
-      console.log(`Server is running on port ${port}`);
-
       // Ping próprio a cada 5 minutos para manter o serviço ativo no Render
       const selfUrl = process.env.RENDER_EXTERNAL_URL || `http://localhost:${port}`;
       setInterval(async () => {
         try {
-          const res = await fetch(`${selfUrl}/health`);
-          console.log(`Health check: ${res.status}`);
+          await fetch(`${selfUrl}/health`);
         } catch (err) {
           console.error('Health check failed:', err);
         }

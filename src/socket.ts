@@ -56,7 +56,6 @@ export function initSocket(httpServer: HTTPServer): SocketIOServer {
   io.on('connection', (socket: Socket) => {
     const user = (socket as any).user;
     socket.join(user.id);
-    console.log(`[Socket] Connected: ${socket.id} (user: ${user.username})`);
 
     // Mark user as online and notify friends
     UsersService.updateStatus(user.id, 'online').then(() => {
@@ -73,7 +72,6 @@ export function initSocket(httpServer: HTTPServer): SocketIOServer {
     });
 
     socket.on('disconnect', () => {
-      console.log(`[Socket] Disconnected: ${socket.id}`);
       UsersService.updateStatus(user.id, 'offline').then(() => {
         broadcastStatusToFriends(user.id, 'offline', user.username);
       });
