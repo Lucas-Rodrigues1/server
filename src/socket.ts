@@ -94,9 +94,12 @@ async function broadcastStatusToFriends(userId: string, status: UserStatus, user
   const friendships = await FriendshipRepository.findAccepted(userId);
   const payload = { userId, username, status };
   for (const f of friendships) {
-    const friendId = (f.requester as any)._id?.toString() === userId
-      ? (f.recipient as any)._id?.toString()
-      : (f.requester as any)._id?.toString();
+    const requester = f.requester as any;
+    const recipient = f.recipient as any;
+    if (!requester || !recipient) continue;
+    const friendId = requester._id?.toString() === userId
+      ? recipient._id?.toString()
+      : requester._id?.toString();
     if (friendId) {
       getIO().to(friendId).emit('trigger-event', { event: 'user:status', data: payload });
     }
