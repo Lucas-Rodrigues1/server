@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
 		"name": "Chat API - server",
-		"description": "Coleção completa da API de chat com autenticação, gerenciamento de usuários, amizades e conversas.",
+		"description": "Coleção completa da API de chat com autenticação, gerenciamento de usuários, amizades e conversas.\n\n## Funcionalidades\n- Autenticação JWT\n- CRUD de usuários (avatar, status)\n- Sistema de amizades (enviar, aceitar, rejeitar, remover)\n- Chat em tempo real via WebSocket\n- Suporte a mensagens de texto com emojis (Unicode nativo)\n- Envio de fotos/imagens via mensagens (type: image + imageUrl base64)\n\n## Como usar\n1. Execute a rota Login - o token JWT é salvo automaticamente\n2. Todas as rotas autenticadas já usam o token salvo\n\n## WebSocket Events (via Socket.IO)\n- **message:send** → Enviar mensagem (text ou image)\n- **message:new** → Receber nova mensagem\n- **message:ack** → Confirmação de envio\n- **message:read** → Marcar como lida\n- **typing:start / typing:stop** → Indicador de digitação\n- **status:change** → Alterar status\n- **user:status** → Notificação de status de amigo",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"variable": [
@@ -606,7 +606,7 @@
 							"status": "OK",
 							"code": 200,
 							"header": [{"key": "Content-Type", "value": "application/json"}],
-							"body": "{\n  \"success\": true,\n  \"messages\": []\n}"
+							"body": "{\n  \"success\": true,\n  \"messages\": [\n    {\n      \"_id\": \"abc123\",\n      \"conversation\": \"conv456\",\n      \"sender\": {\n        \"_id\": \"69b587138cc75dd0bdb8ba6c\",\n        \"username\": \"lucas_eduardo\",\n        \"name\": \"Lucas Eduardo\"\n      },\n      \"content\": \"Olá! 😄👋\",\n      \"type\": \"text\",\n      \"imageUrl\": null,\n      \"createdAt\": \"2026-03-14T12:15:00.000Z\",\n      \"updatedAt\": \"2026-03-14T12:15:00.000Z\"\n    },\n    {\n      \"_id\": \"abc124\",\n      \"conversation\": \"conv456\",\n      \"sender\": {\n        \"_id\": \"69b587138cc75dd0bdb8ba6c\",\n        \"username\": \"lucas_eduardo\",\n        \"name\": \"Lucas Eduardo\"\n      },\n      \"content\": \"📷 Foto\",\n      \"type\": \"image\",\n      \"imageUrl\": \"data:image/png;base64,iVBORw0KGgo...\",\n      \"createdAt\": \"2026-03-14T12:16:00.000Z\",\n      \"updatedAt\": \"2026-03-14T12:16:00.000Z\"\n    }\n  ]\n}"
 						},
 						{
 							"name": "404 - Conversa não encontrada",
@@ -712,6 +712,95 @@
 							"body": "{\n  \"success\": false,\n  \"error\": \"Conversa não encontrada\"\n}"
 						}
 					]
+				}
+			]
+		},
+		{
+			"name": "WebSocket Events (Documentação)",
+			"item": [
+				{
+					"name": "📤 message:send (texto com emoji)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/health",
+							"host": ["{{baseUrl}}"],
+							"path": ["health"]
+						},
+						"description": "**Evento WebSocket** (não é rota HTTP - documentação apenas)\n\nEnvia uma mensagem de texto com suporte a emojis.\n\n**Evento:** `message:send`\n\n**Payload:**\n```json\n{\n  \"conversationId\": \"id_da_conversa\",\n  \"content\": \"Olá! 😄👋🎉\",\n  \"tempId\": \"uuid-temporario\",\n  \"type\": \"text\"\n}\n```\n\n**Resposta (message:ack):**\n```json\n{\n  \"_id\": \"id_mensagem\",\n  \"conversationId\": \"id_da_conversa\",\n  \"sender\": { \"id\": \"user_id\", \"username\": \"lucas_eduardo\" },\n  \"content\": \"Olá! 😄👋🎉\",\n  \"type\": \"text\",\n  \"tempId\": \"uuid-temporario\",\n  \"createdAt\": \"2026-03-14T12:00:00.000Z\"\n}\n```\n\n**Emojis suportados:** Todos os emojis Unicode são suportados nativamente. Exemplos: 😀😂❤️🔥👍🎉💬📸🖼️✨"
+					},
+					"response": []
+				},
+				{
+					"name": "📷 message:send (foto/imagem)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/health",
+							"host": ["{{baseUrl}}"],
+							"path": ["health"]
+						},
+						"description": "**Evento WebSocket** (não é rota HTTP - documentação apenas)\n\nEnvia uma mensagem com imagem/foto.\n\n**Evento:** `message:send`\n\n**Payload:**\n```json\n{\n  \"conversationId\": \"id_da_conversa\",\n  \"content\": \"Olha essa foto!\",\n  \"tempId\": \"uuid-temporario\",\n  \"type\": \"image\",\n  \"imageUrl\": \"data:image/png;base64,iVBORw0KGgoAAAANSUhEUg...\"\n}\n```\n\n**Campos:**\n- `type`: `\"image\"` (obrigatório para fotos)\n- `imageUrl`: string base64 da imagem (obrigatório quando type=image)\n- `content`: legenda opcional (se vazio, será \"📷 Foto\")\n- `tempId`: ID temporário para rastrear o envio\n\n**Resposta (message:ack):**\n```json\n{\n  \"_id\": \"id_mensagem\",\n  \"conversationId\": \"id_da_conversa\",\n  \"sender\": { \"id\": \"user_id\", \"username\": \"lucas_eduardo\" },\n  \"content\": \"Olha essa foto!\",\n  \"type\": \"image\",\n  \"imageUrl\": \"data:image/png;base64,iVBORw0KGgo...\",\n  \"tempId\": \"uuid-temporario\",\n  \"createdAt\": \"2026-03-14T12:01:00.000Z\"\n}\n```\n\n**Limite:** 5MB por imagem (maxHttpBufferSize do Socket.IO)"
+					},
+					"response": []
+				},
+				{
+					"name": "📩 message:new (receber mensagem)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/health",
+							"host": ["{{baseUrl}}"],
+							"path": ["health"]
+						},
+						"description": "**Evento WebSocket** (não é rota HTTP - documentação apenas)\n\nEvento recebido quando outro usuário envia uma mensagem.\n\n**Evento:** `message:new`\n\n**Payload recebido:**\n```json\n{\n  \"_id\": \"id_mensagem\",\n  \"conversationId\": \"id_da_conversa\",\n  \"sender\": { \"id\": \"user_id\", \"username\": \"outro_usuario\" },\n  \"content\": \"Mensagem com emoji! 🎉\",\n  \"type\": \"text\",\n  \"tempId\": \"uuid-do-remetente\",\n  \"createdAt\": \"2026-03-14T12:00:00.000Z\"\n}\n```\n\nPara mensagens com imagem, o campo `type` será `\"image\"` e `imageUrl` conterá a string base64."
+					},
+					"response": []
+				},
+				{
+					"name": "✅ message:read (marcar como lida)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/health",
+							"host": ["{{baseUrl}}"],
+							"path": ["health"]
+						},
+						"description": "**Evento WebSocket** (não é rota HTTP - documentação apenas)\n\nMarca mensagens de uma conversa como lidas e reseta o contador de unread.\n\n**Evento:** `message:read`\n\n**Payload:**\n```json\n{\n  \"conversationId\": \"id_da_conversa\"\n}\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "⌨️ typing:start / typing:stop",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/health",
+							"host": ["{{baseUrl}}"],
+							"path": ["health"]
+						},
+						"description": "**Evento WebSocket** (não é rota HTTP - documentação apenas)\n\nIndicadores de digitação.\n\n**Enviar typing:start:**\n```json\n{\n  \"conversationId\": \"id_da_conversa\"\n}\n```\n\n**Enviar typing:stop:**\n```json\n{\n  \"conversationId\": \"id_da_conversa\"\n}\n```\n\n**Receber typing:start:**\n```json\n{\n  \"conversationId\": \"id_da_conversa\",\n  \"userId\": \"id_do_usuario\",\n  \"username\": \"nome_do_usuario\"\n}\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "🟢 status:change / user:status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/health",
+							"host": ["{{baseUrl}}"],
+							"path": ["health"]
+						},
+						"description": "**Evento WebSocket** (não é rota HTTP - documentação apenas)\n\nAltera o status do usuário e notifica amigos.\n\n**Enviar status:change:**\n```json\n{\n  \"status\": \"online\"\n}\n```\nValores: `online`, `offline`, `ausente`, `ocupado`\n\n**Receber user:status (notificação de amigo):**\n```json\n{\n  \"userId\": \"id_do_amigo\",\n  \"username\": \"nome_do_amigo\",\n  \"status\": \"online\"\n}\n```"
+					},
+					"response": []
 				}
 			]
 		}
