@@ -116,6 +116,11 @@ O arquivo `postman_collection.json` na raiz do projeto contém todas as rotas da
 4. O token JWT é **salvo automaticamente** na variável `{{token}}`
 5. Todas as outras rotas já usam o token — basta executar normalmente
 
+
+https://www.postman.com/lucasrodriguesleal2025-5781285/workspace/chat-service/collectio
+n/53038008-a1a448aa-a86b-406e-b1a8-6f8e71d36cd5?action=share&source=copy-link&cre
+ator=53038008
+
 ### Rotas disponíveis
 
 | Método | Rota | Descrição | Auth |
