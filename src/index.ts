@@ -16,9 +16,10 @@ const httpServer = http.createServer(app);
 const port = process.env.PORT || 3000;
 
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || '*',
+  origin: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
 }));
 app.use(express.json({ limit: '5mb' }));
 

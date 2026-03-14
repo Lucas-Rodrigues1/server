@@ -31,8 +31,9 @@ export function emitTriggerTo<T = unknown>(room: string, event: string, data: T)
 export function initSocket(httpServer: HTTPServer): SocketIOServer {
   io = new SocketIOServer(httpServer, {
     cors: {
-      origin: process.env.CORS_ORIGIN || '*',
+      origin: true,
       methods: ['GET', 'POST'],
+      credentials: true,
     },
     maxHttpBufferSize: 5e6, // 5MB for image messages
   });
