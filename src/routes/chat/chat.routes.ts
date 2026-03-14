@@ -11,6 +11,7 @@ router.get('/conversations', (req, res) => ChatController.listConversations(req,
 router.get('/conversations/archived', (req, res) => ChatController.listArchivedConversations(req, res));
 router.get('/conversations/:id/messages', (req, res) => ChatController.getMessages(req, res));
 router.patch('/conversations/:id/archive', (req, res) => ChatController.archiveConversation(req, res));
+router.patch('/conversations/:id/unarchive', (req, res) => ChatController.unarchiveConversation(req, res));
 router.delete('/conversations/:id', (req, res) => ChatController.deleteConversation(req, res));
 
 export default router;

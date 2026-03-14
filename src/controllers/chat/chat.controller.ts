@@ -49,6 +49,12 @@ class ChatController {
     return res.status(result.success ? 200 : 404).json(result);
   }
 
+  async unarchiveConversation(req: Request, res: Response) {
+    const user = (req as any).user;
+    const result = await ChatService.unarchiveConversation(req.params.id as string, user.id);
+    return res.status(result.success ? 200 : 404).json(result);
+  }
+
   async deleteConversation(req: Request, res: Response) {
     const user = (req as any).user;
     const result = await ChatService.deleteConversation(req.params.id as string, user.id);

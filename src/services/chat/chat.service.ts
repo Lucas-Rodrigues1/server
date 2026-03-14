@@ -51,6 +51,13 @@ class ChatService {
     return { success: true };
   }
 
+  async unarchiveConversation(conversationId: string, userId: string) {
+    const conv = await this.getConversation(conversationId, userId);
+    if (!conv) return { success: false, error: 'Conversa não encontrada' };
+    await ConversationRepository.unarchive(conversationId, userId);
+    return { success: true };
+  }
+
   async deleteConversation(conversationId: string, userId: string) {
     const conv = await this.getConversation(conversationId, userId);
     if (!conv) return { success: false, error: 'Conversa não encontrada' };

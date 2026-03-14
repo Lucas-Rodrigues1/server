@@ -35,13 +35,19 @@ class ConversationRepository {
   }
 
   async archive(conversationId: string, userId: string) {
-    const conv = await Conversation.findById(conversationId);
-    if (!conv) return null;
-    const alreadyArchived = conv.archivedBy.some(id => id.toString() === userId);
-    const update = alreadyArchived
-      ? { $pull: { archivedBy: userId } }
-      : { $addToSet: { archivedBy: userId } };
-    return await Conversation.findByIdAndUpdate(conversationId, update, { new: true });
+    return await Conversation.findByIdAndUpdate(
+      conversationId,
+      { $addToSet: { archivedBy: userId } },
+      { new: true },
+    );
+  }
+
+  async unarchive(conversationId: string, userId: string) {
+    return await Conversation.findByIdAndUpdate(
+      conversationId,
+      { $pull: { archivedBy: userId } },
+      { new: true },
+    );
   }
 
   async softDelete(conversationId: string, userId: string) {
