@@ -34,6 +34,7 @@ export function initSocket(httpServer: HTTPServer): SocketIOServer {
       origin: process.env.CORS_ORIGIN || '*',
       methods: ['GET', 'POST'],
     },
+    maxHttpBufferSize: 5e6, // 5MB for image messages
   });
 
   io.use((socket, next) => {

@@ -1,5 +1,6 @@
 ﻿import ConversationRepository from '../../repository/conversation.repository';
 import MessageRepository from '../../repository/message.repository';
+import type { MessageType } from '../../schemas/message.schema';
 
 class ChatService {
   async startConversation(userId: string, friendId: string) {
@@ -24,8 +25,8 @@ class ChatService {
     return isMember ? conv : null;
   }
 
-  async saveMessage(conversationId: string, senderId: string, content: string) {
-    const message = await MessageRepository.create(conversationId, senderId, content);
+  async saveMessage(conversationId: string, senderId: string, content: string, type: MessageType = 'text', imageUrl?: string) {
+    const message = await MessageRepository.create(conversationId, senderId, content, type, imageUrl);
     await ConversationRepository.setLastMessage(conversationId, (message._id as any).toString());
     return message;
   }

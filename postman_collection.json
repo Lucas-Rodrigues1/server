@@ -15,6 +15,11 @@
 			"key": "token",
 			"value": "",
 			"type": "string"
+		},
+		{
+			"key": "userId",
+			"value": "69b587138cc75dd0bdb8ba6c",
+			"type": "string"
 		}
 	],
 	"auth": {
@@ -68,6 +73,9 @@
 									"var jsonData = pm.response.json();",
 									"if (jsonData.token) {",
 									"    pm.collectionVariables.set('token', jsonData.token);",
+									"}",
+									"if (jsonData.user && jsonData.user.id) {",
+									"    pm.collectionVariables.set('userId', jsonData.user.id);",
 									"}"
 								],
 								"type": "text/javascript"
@@ -82,14 +90,14 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"lucas\",\n  \"password\": \"123456\"\n}"
+							"raw": "{\n  \"username\": \"lucas_eduardo\",\n  \"password\": \"M@ndateste65\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/auth/login",
 							"host": ["{{baseUrl}}"],
 							"path": ["auth", "login"]
 						},
-						"description": "Autentica o usuário e retorna um token JWT. O token é salvo automaticamente na variável `token` da coleção."
+						"description": "Autentica o usuário e retorna um token JWT. O token e o userId são salvos automaticamente nas variáveis da coleção para uso nas próximas requisições."
 					},
 					"response": [
 						{
@@ -97,7 +105,7 @@
 							"status": "OK",
 							"code": 200,
 							"header": [{"key": "Content-Type", "value": "application/json"}],
-							"body": "{\n  \"success\": true,\n  \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n  \"user\": {\n    \"id\": \"665a1b2c3d4e5f6a7b8c9d0e\",\n    \"username\": \"lucas\",\n    \"name\": \"Lucas\"\n  }\n}"
+							"body": "{\n  \"success\": true,\n  \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n  \"user\": {\n    \"id\": \"69b587138cc75dd0bdb8ba6c\",\n    \"username\": \"lucas_eduardo\",\n    \"name\": \"Lucas Eduardo\"\n  }\n}"
 						},
 						{
 							"name": "401 - Credenciais inválidas",
@@ -126,7 +134,7 @@
 							"status": "OK",
 							"code": 200,
 							"header": [{"key": "Content-Type", "value": "application/json"}],
-							"body": "{\n  \"success\": true,\n  \"user\": {\n    \"_id\": \"665a1b2c3d4e5f6a7b8c9d0e\",\n    \"username\": \"lucas\",\n    \"name\": \"Lucas\",\n    \"status\": \"online\",\n    \"avatar\": null,\n    \"__v\": 0\n  }\n}"
+							"body": "{\n  \"success\": true,\n  \"user\": {\n    \"_id\": \"69b587138cc75dd0bdb8ba6c\",\n    \"username\": \"lucas_eduardo\",\n    \"name\": \"Lucas Eduardo\",\n    \"status\": \"online\",\n    \"avatar\": null,\n    \"__v\": 0\n  }\n}"
 						}
 					]
 				}
@@ -145,7 +153,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\": \"Lucas Silva\",\n  \"username\": \"lucas\",\n  \"password\": \"123456\"\n}"
+							"raw": "{\n  \"name\": \"Lucas Eduardo\",\n  \"username\": \"lucas_eduardo\",\n  \"password\": \"M@ndateste65\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/users/create",
@@ -160,7 +168,7 @@
 							"status": "Created",
 							"code": 201,
 							"header": [{"key": "Content-Type", "value": "application/json"}],
-							"body": "{\n  \"success\": true,\n  \"user\": {\n    \"_id\": \"665a1b2c3d4e5f6a7b8c9d0e\",\n    \"username\": \"lucas\",\n    \"name\": \"Lucas Silva\",\n    \"status\": \"offline\",\n    \"avatar\": null\n  }\n}"
+							"body": "{\n  \"success\": true,\n  \"user\": {\n    \"_id\": \"69b587138cc75dd0bdb8ba6c\",\n    \"username\": \"lucas_eduardo\",\n    \"name\": \"Lucas Eduardo\",\n    \"status\": \"offline\",\n    \"avatar\": null\n  }\n}"
 						},
 						{
 							"name": "400 - Campos obrigatórios faltando",
@@ -184,11 +192,11 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/users/search?q=lucas",
+							"raw": "{{baseUrl}}/users/search?q=lucas_eduardo",
 							"host": ["{{baseUrl}}"],
 							"path": ["users", "search"],
 							"query": [
-								{ "key": "q", "value": "lucas", "description": "Texto de busca (username ou name)" }
+								{ "key": "q", "value": "lucas_eduardo", "description": "Texto de busca (username ou name)" }
 							]
 						},
 						"description": "Busca usuários pelo nome ou username. Requer autenticação. Exclui o próprio usuário dos resultados."
@@ -199,7 +207,7 @@
 							"status": "OK",
 							"code": 200,
 							"header": [{"key": "Content-Type", "value": "application/json"}],
-							"body": "{\n  \"success\": true,\n  \"users\": [\n    {\n      \"_id\": \"665a1b2c3d4e5f6a7b8c9d0e\",\n      \"username\": \"lucas\",\n      \"name\": \"Lucas Silva\",\n      \"avatar\": null\n    }\n  ]\n}"
+							"body": "{\n  \"success\": true,\n  \"users\": [\n    {\n      \"_id\": \"69b587138cc75dd0bdb8ba6c\",\n      \"username\": \"lucas_eduardo\",\n      \"name\": \"Lucas Eduardo\",\n      \"avatar\": null\n    }\n  ]\n}"
 						},
 						{
 							"name": "400 - Parâmetro q ausente",
@@ -228,7 +236,7 @@
 							"status": "OK",
 							"code": 200,
 							"header": [{"key": "Content-Type", "value": "application/json"}],
-							"body": "{\n  \"success\": true,\n  \"user\": {\n    \"_id\": \"665a1b2c3d4e5f6a7b8c9d0e\",\n    \"username\": \"lucas\",\n    \"name\": \"Lucas Silva\",\n    \"avatar\": null\n  }\n}"
+							"body": "{\n  \"success\": true,\n  \"user\": {\n    \"_id\": \"69b587138cc75dd0bdb8ba6c\",\n    \"username\": \"lucas_eduardo\",\n    \"name\": \"Lucas Eduardo\",\n    \"avatar\": null\n  }\n}"
 						},
 						{
 							"name": "404 - Usuário não encontrado",
@@ -323,7 +331,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"recipientId\": \"665a1b2c3d4e5f6a7b8c9d0f\"\n}"
+							"raw": "{\n  \"recipientId\": \"SUBSTITUIR_PELO_ID_DO_DESTINATARIO\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/friends/request",
@@ -338,7 +346,7 @@
 							"status": "OK",
 							"code": 200,
 							"header": [{"key": "Content-Type", "value": "application/json"}],
-							"body": "{\n  \"success\": true,\n  \"friendship\": {\n    \"_id\": \"665b2c3d4e5f6a7b8c9d0e1f\",\n    \"requester\": \"665a1b2c3d4e5f6a7b8c9d0e\",\n    \"recipient\": \"665a1b2c3d4e5f6a7b8c9d0f\",\n    \"status\": \"pending\",\n    \"createdAt\": \"2025-06-01T12:00:00.000Z\",\n    \"updatedAt\": \"2025-06-01T12:00:00.000Z\"\n  }\n}"
+							"body": "{\n  \"success\": true,\n  \"friendship\": {\n    \"_id\": \"aaa111bbb222ccc333ddd444\",\n    \"requester\": \"69b587138cc75dd0bdb8ba6c\",\n    \"recipient\": \"SUBSTITUIR_PELO_ID_DO_DESTINATARIO\",\n    \"status\": \"pending\",\n    \"createdAt\": \"2026-03-14T12:00:00.000Z\",\n    \"updatedAt\": \"2026-03-14T12:00:00.000Z\"\n  }\n}"
 						},
 						{
 							"name": "400 - recipientId ausente",
@@ -367,7 +375,7 @@
 							"status": "OK",
 							"code": 200,
 							"header": [{"key": "Content-Type", "value": "application/json"}],
-							"body": "{\n  \"success\": true,\n  \"requests\": [\n    {\n      \"_id\": \"665b2c3d4e5f6a7b8c9d0e1f\",\n      \"requester\": {\n        \"_id\": \"665a1b2c3d4e5f6a7b8c9d0e\",\n        \"username\": \"lucas\",\n        \"name\": \"Lucas Silva\"\n      },\n      \"recipient\": \"665a1b2c3d4e5f6a7b8c9d0f\",\n      \"status\": \"pending\",\n      \"createdAt\": \"2025-06-01T12:00:00.000Z\",\n      \"updatedAt\": \"2025-06-01T12:00:00.000Z\"\n    }\n  ]\n}"
+							"body": "{\n  \"success\": true,\n  \"requests\": []\n}"
 						}
 					]
 				},
@@ -389,7 +397,7 @@
 							"status": "OK",
 							"code": 200,
 							"header": [{"key": "Content-Type", "value": "application/json"}],
-							"body": "{\n  \"success\": true,\n  \"friends\": [\n    {\n      \"_id\": \"665b2c3d4e5f6a7b8c9d0e1f\",\n      \"requester\": {\n        \"_id\": \"665a1b2c3d4e5f6a7b8c9d0e\",\n        \"username\": \"lucas\",\n        \"name\": \"Lucas Silva\",\n        \"status\": \"online\",\n        \"avatar\": null\n      },\n      \"recipient\": {\n        \"_id\": \"665a1b2c3d4e5f6a7b8c9d0f\",\n        \"username\": \"maria\",\n        \"name\": \"Maria Santos\",\n        \"status\": \"offline\",\n        \"avatar\": null\n      },\n      \"status\": \"accepted\",\n      \"createdAt\": \"2025-06-01T12:00:00.000Z\",\n      \"updatedAt\": \"2025-06-01T12:05:00.000Z\"\n    }\n  ]\n}"
+							"body": "{\n  \"success\": true,\n  \"friends\": []\n}"
 						}
 					]
 				},
@@ -403,7 +411,7 @@
 							"host": ["{{baseUrl}}"],
 							"path": ["friends", "accept", ":id"],
 							"variable": [
-								{ "key": "id", "value": "665b2c3d4e5f6a7b8c9d0e1f", "description": "ID da solicitação de amizade" }
+								{ "key": "id", "value": "SUBSTITUIR_PELO_ID_DA_AMIZADE", "description": "ID da solicitação de amizade" }
 							]
 						},
 						"description": "Aceita uma solicitação de amizade pendente."
@@ -435,7 +443,7 @@
 							"host": ["{{baseUrl}}"],
 							"path": ["friends", "reject", ":id"],
 							"variable": [
-								{ "key": "id", "value": "665b2c3d4e5f6a7b8c9d0e1f", "description": "ID da solicitação de amizade" }
+								{ "key": "id", "value": "SUBSTITUIR_PELO_ID_DA_AMIZADE", "description": "ID da solicitação de amizade" }
 							]
 						},
 						"description": "Rejeita uma solicitação de amizade pendente."
@@ -467,7 +475,7 @@
 							"host": ["{{baseUrl}}"],
 							"path": ["friends", ":id"],
 							"variable": [
-								{ "key": "id", "value": "665b2c3d4e5f6a7b8c9d0e1f", "description": "ID da amizade" }
+								{ "key": "id", "value": "SUBSTITUIR_PELO_ID_DA_AMIZADE", "description": "ID da amizade" }
 							]
 						},
 						"description": "Remove um amigo da lista."
@@ -503,7 +511,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"friendId\": \"665a1b2c3d4e5f6a7b8c9d0f\"\n}"
+							"raw": "{\n  \"friendId\": \"SUBSTITUIR_PELO_ID_DO_AMIGO\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/chat/conversations",
@@ -518,7 +526,7 @@
 							"status": "OK",
 							"code": 200,
 							"header": [{"key": "Content-Type", "value": "application/json"}],
-							"body": "{\n  \"success\": true,\n  \"conversation\": {\n    \"_id\": \"665c3d4e5f6a7b8c9d0e1f2a\",\n    \"participants\": [\n      \"665a1b2c3d4e5f6a7b8c9d0e\",\n      \"665a1b2c3d4e5f6a7b8c9d0f\"\n    ],\n    \"archivedBy\": [],\n    \"deletedBy\": [],\n    \"unreadCounts\": {},\n    \"createdAt\": \"2025-06-01T12:10:00.000Z\",\n    \"updatedAt\": \"2025-06-01T12:10:00.000Z\"\n  }\n}"
+							"body": "{\n  \"success\": true,\n  \"conversation\": {\n    \"_id\": \"aaa111bbb222ccc333ddd444\",\n    \"participants\": [\n      \"69b587138cc75dd0bdb8ba6c\",\n      \"SUBSTITUIR_PELO_ID_DO_AMIGO\"\n    ],\n    \"archivedBy\": [],\n    \"deletedBy\": [],\n    \"unreadCounts\": {},\n    \"createdAt\": \"2026-03-14T12:10:00.000Z\",\n    \"updatedAt\": \"2026-03-14T12:10:00.000Z\"\n  }\n}"
 						},
 						{
 							"name": "400 - friendId ausente",
@@ -547,7 +555,7 @@
 							"status": "OK",
 							"code": 200,
 							"header": [{"key": "Content-Type", "value": "application/json"}],
-							"body": "{\n  \"success\": true,\n  \"conversations\": [\n    {\n      \"_id\": \"665c3d4e5f6a7b8c9d0e1f2a\",\n      \"participants\": [\n        {\n          \"_id\": \"665a1b2c3d4e5f6a7b8c9d0e\",\n          \"username\": \"lucas\",\n          \"name\": \"Lucas Silva\",\n          \"avatar\": null\n        },\n        {\n          \"_id\": \"665a1b2c3d4e5f6a7b8c9d0f\",\n          \"username\": \"maria\",\n          \"name\": \"Maria Santos\",\n          \"avatar\": null\n        }\n      ],\n      \"archivedBy\": [],\n      \"deletedBy\": [],\n      \"lastMessage\": {\n        \"_id\": \"665d4e5f6a7b8c9d0e1f2a3b\",\n        \"content\": \"Olá!\",\n        \"sender\": \"665a1b2c3d4e5f6a7b8c9d0e\",\n        \"createdAt\": \"2025-06-01T12:15:00.000Z\"\n      },\n      \"unreadCount\": 2,\n      \"createdAt\": \"2025-06-01T12:10:00.000Z\",\n      \"updatedAt\": \"2025-06-01T12:15:00.000Z\"\n    }\n  ]\n}"
+							"body": "{\n  \"success\": true,\n  \"conversations\": []\n}"
 						}
 					]
 				},
@@ -569,7 +577,7 @@
 							"status": "OK",
 							"code": 200,
 							"header": [{"key": "Content-Type", "value": "application/json"}],
-							"body": "{\n  \"success\": true,\n  \"conversations\": [\n    {\n      \"_id\": \"665c3d4e5f6a7b8c9d0e1f2a\",\n      \"participants\": [\n        {\n          \"_id\": \"665a1b2c3d4e5f6a7b8c9d0e\",\n          \"username\": \"lucas\",\n          \"name\": \"Lucas Silva\"\n        }\n      ],\n      \"archivedBy\": [\"665a1b2c3d4e5f6a7b8c9d0e\"],\n      \"unreadCount\": 0,\n      \"createdAt\": \"2025-06-01T12:10:00.000Z\",\n      \"updatedAt\": \"2025-06-01T13:00:00.000Z\"\n    }\n  ]\n}"
+							"body": "{\n  \"success\": true,\n  \"conversations\": []\n}"
 						}
 					]
 				},
@@ -587,7 +595,7 @@
 								{ "key": "before", "value": "", "description": "ID da mensagem para paginação (cursor). Retorna mensagens anteriores a esta.", "disabled": true }
 							],
 							"variable": [
-								{ "key": "id", "value": "665c3d4e5f6a7b8c9d0e1f2a", "description": "ID da conversa" }
+								{ "key": "id", "value": "SUBSTITUIR_PELO_ID_DA_CONVERSA", "description": "ID da conversa" }
 							]
 						},
 						"description": "Retorna as mensagens de uma conversa com paginação por cursor."
@@ -598,7 +606,7 @@
 							"status": "OK",
 							"code": 200,
 							"header": [{"key": "Content-Type", "value": "application/json"}],
-							"body": "{\n  \"success\": true,\n  \"messages\": [\n    {\n      \"_id\": \"665d4e5f6a7b8c9d0e1f2a3b\",\n      \"conversation\": \"665c3d4e5f6a7b8c9d0e1f2a\",\n      \"sender\": {\n        \"_id\": \"665a1b2c3d4e5f6a7b8c9d0e\",\n        \"username\": \"lucas\",\n        \"name\": \"Lucas Silva\"\n      },\n      \"content\": \"Olá, tudo bem?\",\n      \"createdAt\": \"2025-06-01T12:15:00.000Z\",\n      \"updatedAt\": \"2025-06-01T12:15:00.000Z\"\n    },\n    {\n      \"_id\": \"665d4e5f6a7b8c9d0e1f2a3c\",\n      \"conversation\": \"665c3d4e5f6a7b8c9d0e1f2a\",\n      \"sender\": {\n        \"_id\": \"665a1b2c3d4e5f6a7b8c9d0f\",\n        \"username\": \"maria\",\n        \"name\": \"Maria Santos\"\n      },\n      \"content\": \"Tudo sim! E você?\",\n      \"createdAt\": \"2025-06-01T12:16:00.000Z\",\n      \"updatedAt\": \"2025-06-01T12:16:00.000Z\"\n    }\n  ]\n}"
+							"body": "{\n  \"success\": true,\n  \"messages\": []\n}"
 						},
 						{
 							"name": "404 - Conversa não encontrada",
@@ -619,7 +627,7 @@
 							"host": ["{{baseUrl}}"],
 							"path": ["chat", "conversations", ":id", "archive"],
 							"variable": [
-								{ "key": "id", "value": "665c3d4e5f6a7b8c9d0e1f2a", "description": "ID da conversa" }
+								{ "key": "id", "value": "SUBSTITUIR_PELO_ID_DA_CONVERSA", "description": "ID da conversa" }
 							]
 						},
 						"description": "Arquiva uma conversa para o usuário autenticado."
@@ -627,6 +635,38 @@
 					"response": [
 						{
 							"name": "200 - Conversa arquivada",
+							"status": "OK",
+							"code": 200,
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"body": "{\n  \"success\": true\n}"
+						},
+						{
+							"name": "404 - Conversa não encontrada",
+							"status": "Not Found",
+							"code": 404,
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"body": "{\n  \"success\": false,\n  \"error\": \"Conversa não encontrada\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Unarchive Conversation",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/chat/conversations/:id/unarchive",
+							"host": ["{{baseUrl}}"],
+							"path": ["chat", "conversations", ":id", "unarchive"],
+							"variable": [
+								{ "key": "id", "value": "SUBSTITUIR_PELO_ID_DA_CONVERSA", "description": "ID da conversa" }
+							]
+						},
+						"description": "Desarquiva uma conversa para o usuário autenticado."
+					},
+					"response": [
+						{
+							"name": "200 - Conversa desarquivada",
 							"status": "OK",
 							"code": 200,
 							"header": [{"key": "Content-Type", "value": "application/json"}],
@@ -651,7 +691,7 @@
 							"host": ["{{baseUrl}}"],
 							"path": ["chat", "conversations", ":id"],
 							"variable": [
-								{ "key": "id", "value": "665c3d4e5f6a7b8c9d0e1f2a", "description": "ID da conversa" }
+								{ "key": "id", "value": "SUBSTITUIR_PELO_ID_DA_CONVERSA", "description": "ID da conversa" }
 							]
 						},
 						"description": "Deleta uma conversa para o usuário autenticado (soft delete)."

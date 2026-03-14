@@ -8,6 +8,8 @@ interface SendMessageData {
   conversationId: string;
   content: string;
   tempId: string;
+  type?: 'text' | 'image';
+  imageUrl?: string;
 }
 
 interface TypingData {
@@ -81,10 +83,15 @@ export function registerChatHandlers() {
 
   onTrigger<SendMessageData>('message:send', async (socket, data) => {
     const user = (socket as any).user;
-    const { conversationId, content, tempId } = data;
+    const { conversationId, content, tempId, type = 'text', imageUrl } = data;
 
-    if (!conversationId || !content?.trim()) {
+    if (!conversationId || (!content?.trim() && type !== 'image')) {
       socket.emit('trigger-event', { event: 'message:error', data: { tempId, error: 'Dados inválidos' } });
+      return;
+    }
+
+    if (type === 'image' && !imageUrl) {
+      socket.emit('trigger-event', { event: 'message:error', data: { tempId, error: 'Imagem não fornecida' } });
       return;
     }
 
@@ -94,7 +101,8 @@ export function registerChatHandlers() {
       return;
     }
 
-    const message = await ChatService.saveMessage(conversationId, user.id, content.trim());
+    const msgContent = type === 'image' ? (content?.trim() || '📷 Foto') : content.trim();
+    const message = await ChatService.saveMessage(conversationId, user.id, msgContent, type, imageUrl);
 
     const recipientId = conversation.participants
       .find(p => p.toString() !== user.id)
@@ -104,7 +112,9 @@ export function registerChatHandlers() {
       _id: message._id,
       conversationId,
       sender: { id: user.id, username: user.username },
-      content: content.trim(),
+      content: msgContent,
+      type: type,
+      imageUrl: type === 'image' ? imageUrl : undefined,
       tempId,
       createdAt: (message as any).createdAt,
     };
