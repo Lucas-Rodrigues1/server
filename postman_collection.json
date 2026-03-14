@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
 		"name": "Chat API - server",
-		"description": "Coleção completa da API de chat com autenticação, gerenciamento de usuários, amizades e conversas.\n\n## Funcionalidades\n- Autenticação JWT\n- CRUD de usuários (avatar, status)\n- Sistema de amizades (enviar, aceitar, rejeitar, remover)\n- Chat em tempo real via WebSocket\n- Suporte a mensagens de texto com emojis (Unicode nativo)\n- Envio de fotos/imagens via mensagens (type: image + imageUrl base64)\n\n## Como usar\n1. Execute a rota Login - o token JWT é salvo automaticamente\n2. Todas as rotas autenticadas já usam o token salvo\n\n## WebSocket Events (via Socket.IO)\n- **message:send** → Enviar mensagem (text ou image)\n- **message:new** → Receber nova mensagem\n- **message:ack** → Confirmação de envio\n- **message:read** → Marcar como lida\n- **typing:start / typing:stop** → Indicador de digitação\n- **status:change** → Alterar status\n- **user:status** → Notificação de status de amigo",
+		"description": "Colecao completa da API de chat com autenticacao, gerenciamento de usuarios, amizades e conversas.\n\n## Funcionalidades\n- Autenticacao JWT\n- CRUD de usuarios (avatar, status)\n- Sistema de amizades (enviar, aceitar, rejeitar, remover)\n- Chat em tempo real via WebSocket\n- Suporte a mensagens de texto com emojis (Unicode nativo)\n- Envio de fotos/imagens via mensagens (type: image + imageUrl base64)\n\n## Como usar\n1. Execute a rota Login - o token JWT e salvo automaticamente\n2. Todas as rotas autenticadas ja usam o token salvo\n\n## WebSocket Events (via Socket.IO)\n- **message:send** - Enviar mensagem (text ou image)\n- **message:new** - Receber nova mensagem\n- **message:ack** - Confirmacao de envio\n- **message:read** - Marcar como lida\n- **typing:start / typing:stop** - Indicador de digitacao\n- **status:change** - Alterar status\n- **user:status** - Notificacao de status de amigo",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"variable": [
@@ -18,7 +18,7 @@
 		},
 		{
 			"key": "userId",
-			"value": "69b587138cc75dd0bdb8ba6c",
+			"value": "69b5b2b45066945dadbb638e",
 			"type": "string"
 		}
 	],
@@ -46,7 +46,7 @@
 							"host": ["{{baseUrl}}"],
 							"path": ["health"]
 						},
-						"description": "Verifica se a API está online."
+						"description": "Verifica se a API esta online."
 					},
 					"response": [
 						{
@@ -90,14 +90,14 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"lucas_eduardo\",\n  \"password\": \"M@ndateste65\"\n}"
+							"raw": "{\n  \"username\": \"lucasRodrigues\",\n  \"password\": \"M@ndateste65\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/auth/login",
 							"host": ["{{baseUrl}}"],
 							"path": ["auth", "login"]
 						},
-						"description": "Autentica o usuário e retorna um token JWT. O token e o userId são salvos automaticamente nas variáveis da coleção para uso nas próximas requisições."
+						"description": "Autentica o usuario e retorna um token JWT. O token e o userId sao salvos automaticamente nas variaveis da colecao para uso nas proximas requisicoes."
 					},
 					"response": [
 						{
@@ -105,10 +105,10 @@
 							"status": "OK",
 							"code": 200,
 							"header": [{"key": "Content-Type", "value": "application/json"}],
-							"body": "{\n  \"success\": true,\n  \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n  \"user\": {\n    \"id\": \"69b587138cc75dd0bdb8ba6c\",\n    \"username\": \"lucas_eduardo\",\n    \"name\": \"Lucas Eduardo\"\n  }\n}"
+							"body": "{\n  \"success\": true,\n  \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n  \"user\": {\n    \"id\": \"69b5b2b45066945dadbb638e\",\n    \"username\": \"lucasRodrigues\",\n    \"name\": \"Lucas Eduardo\"\n  }\n}"
 						},
 						{
-							"name": "401 - Credenciais inválidas",
+							"name": "401 - Credenciais invalidas",
 							"status": "Unauthorized",
 							"code": 401,
 							"header": [{"key": "Content-Type", "value": "application/json"}],
@@ -126,7 +126,7 @@
 							"host": ["{{baseUrl}}"],
 							"path": ["auth", "profile"]
 						},
-						"description": "Retorna o perfil do usuário autenticado (sem o campo password)."
+						"description": "Retorna o perfil do usuario autenticado (sem o campo password)."
 					},
 					"response": [
 						{
@@ -134,7 +134,7 @@
 							"status": "OK",
 							"code": 200,
 							"header": [{"key": "Content-Type", "value": "application/json"}],
-							"body": "{\n  \"success\": true,\n  \"user\": {\n    \"_id\": \"69b587138cc75dd0bdb8ba6c\",\n    \"username\": \"lucas_eduardo\",\n    \"name\": \"Lucas Eduardo\",\n    \"status\": \"online\",\n    \"avatar\": null,\n    \"__v\": 0\n  }\n}"
+							"body": "{\n  \"success\": true,\n  \"user\": {\n    \"_id\": \"69b5b2b45066945dadbb638e\",\n    \"username\": \"lucasRodrigues\",\n    \"name\": \"Lucas Eduardo\",\n    \"status\": \"online\",\n    \"avatar\": null,\n    \"__v\": 0\n  }\n}"
 						}
 					]
 				}
@@ -153,32 +153,32 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\": \"Lucas Eduardo\",\n  \"username\": \"lucas_eduardo\",\n  \"password\": \"M@ndateste65\"\n}"
+							"raw": "{\n  \"name\": \"Lucas Eduardo\",\n  \"username\": \"lucasRodrigues\",\n  \"password\": \"M@ndateste65\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/users/create",
 							"host": ["{{baseUrl}}"],
 							"path": ["users", "create"]
 						},
-						"description": "Cria um novo usuário. Não requer autenticação."
+						"description": "Cria um novo usuario. Nao requer autenticacao."
 					},
 					"response": [
 						{
-							"name": "201 - Usuário criado",
+							"name": "201 - Usuario criado",
 							"status": "Created",
 							"code": 201,
 							"header": [{"key": "Content-Type", "value": "application/json"}],
-							"body": "{\n  \"success\": true,\n  \"user\": {\n    \"_id\": \"69b587138cc75dd0bdb8ba6c\",\n    \"username\": \"lucas_eduardo\",\n    \"name\": \"Lucas Eduardo\",\n    \"status\": \"offline\",\n    \"avatar\": null\n  }\n}"
+							"body": "{\n  \"success\": true,\n  \"user\": {\n    \"_id\": \"69b5b2b45066945dadbb638e\",\n    \"username\": \"lucasRodrigues\",\n    \"name\": \"Lucas Eduardo\",\n    \"status\": \"offline\",\n    \"avatar\": null\n  }\n}"
 						},
 						{
-							"name": "400 - Campos obrigatórios faltando",
+							"name": "400 - Campos obrigatorios faltando",
 							"status": "Bad Request",
 							"code": 400,
 							"header": [{"key": "Content-Type", "value": "application/json"}],
 							"body": "{\n  \"error\": \"Missing required fields: name, username, password\"\n}"
 						},
 						{
-							"name": "409 - Username já existe",
+							"name": "409 - Username ja existe",
 							"status": "Conflict",
 							"code": 409,
 							"header": [{"key": "Content-Type", "value": "application/json"}],
@@ -192,14 +192,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/users/search?q=lucas_eduardo",
+							"raw": "{{baseUrl}}/users/search?q=lucasRodrigues",
 							"host": ["{{baseUrl}}"],
 							"path": ["users", "search"],
 							"query": [
-								{ "key": "q", "value": "lucas_eduardo", "description": "Texto de busca (username ou name)" }
+								{ "key": "q", "value": "lucasRodrigues", "description": "Texto de busca (username ou name)" }
 							]
 						},
-						"description": "Busca usuários pelo nome ou username. Requer autenticação. Exclui o próprio usuário dos resultados."
+						"description": "Busca usuarios pelo nome ou username. Requer autenticacao. Exclui o proprio usuario dos resultados."
 					},
 					"response": [
 						{
@@ -207,14 +207,14 @@
 							"status": "OK",
 							"code": 200,
 							"header": [{"key": "Content-Type", "value": "application/json"}],
-							"body": "{\n  \"success\": true,\n  \"users\": [\n    {\n      \"_id\": \"69b587138cc75dd0bdb8ba6c\",\n      \"username\": \"lucas_eduardo\",\n      \"name\": \"Lucas Eduardo\",\n      \"avatar\": null\n    }\n  ]\n}"
+							"body": "{\n  \"success\": true,\n  \"users\": [\n    {\n      \"_id\": \"69b5b2b45066945dadbb638e\",\n      \"username\": \"lucasRodrigues\",\n      \"name\": \"Lucas Eduardo\",\n      \"avatar\": null\n    }\n  ]\n}"
 						},
 						{
-							"name": "400 - Parâmetro q ausente",
+							"name": "400 - Parametro q ausente",
 							"status": "Bad Request",
 							"code": 400,
 							"header": [{"key": "Content-Type", "value": "application/json"}],
-							"body": "{\n  \"success\": false,\n  \"error\": \"Parâmetro q é obrigatório\"\n}"
+							"body": "{\n  \"success\": false,\n  \"error\": \"Parametro q e obrigatorio\"\n}"
 						}
 					]
 				},
@@ -228,22 +228,22 @@
 							"host": ["{{baseUrl}}"],
 							"path": ["users", "me"]
 						},
-						"description": "Retorna os dados do usuário autenticado (id, username, name, avatar)."
+						"description": "Retorna os dados do usuario autenticado (id, username, name, avatar)."
 					},
 					"response": [
 						{
-							"name": "200 - Usuário encontrado",
+							"name": "200 - Usuario encontrado",
 							"status": "OK",
 							"code": 200,
 							"header": [{"key": "Content-Type", "value": "application/json"}],
-							"body": "{\n  \"success\": true,\n  \"user\": {\n    \"_id\": \"69b587138cc75dd0bdb8ba6c\",\n    \"username\": \"lucas_eduardo\",\n    \"name\": \"Lucas Eduardo\",\n    \"avatar\": null\n  }\n}"
+							"body": "{\n  \"success\": true,\n  \"user\": {\n    \"_id\": \"69b5b2b45066945dadbb638e\",\n    \"username\": \"lucasRodrigues\",\n    \"name\": \"Lucas Eduardo\",\n    \"avatar\": null\n  }\n}"
 						},
 						{
-							"name": "404 - Usuário não encontrado",
+							"name": "404 - Usuario nao encontrado",
 							"status": "Not Found",
 							"code": 404,
 							"header": [{"key": "Content-Type", "value": "application/json"}],
-							"body": "{\n  \"success\": false,\n  \"error\": \"Usuário não encontrado\"\n}"
+							"body": "{\n  \"success\": false,\n  \"error\": \"Usuario nao encontrado\"\n}"
 						}
 					]
 				},
@@ -263,7 +263,7 @@
 							"host": ["{{baseUrl}}"],
 							"path": ["users", "avatar"]
 						},
-						"description": "Atualiza o avatar do usuário autenticado. Envie uma string base64 de imagem ou null para remover."
+						"description": "Atualiza o avatar do usuario autenticado. Envie uma string base64 de imagem ou null para remover."
 					},
 					"response": [
 						{
@@ -274,11 +274,11 @@
 							"body": "{\n  \"success\": true\n}"
 						},
 						{
-							"name": "400 - Formato inválido",
+							"name": "400 - Formato invalido",
 							"status": "Bad Request",
 							"code": 400,
 							"header": [{"key": "Content-Type", "value": "application/json"}],
-							"body": "{\n  \"success\": false,\n  \"error\": \"Formato de imagem inválido\"\n}"
+							"body": "{\n  \"success\": false,\n  \"error\": \"Formato de imagem invalido\"\n}"
 						}
 					]
 				},
@@ -298,7 +298,7 @@
 							"host": ["{{baseUrl}}"],
 							"path": ["users", "status"]
 						},
-						"description": "Atualiza o status do usuário. Valores válidos: online, offline, ausente, ocupado."
+						"description": "Atualiza o status do usuario. Valores validos: online, offline, ausente, ocupado."
 					},
 					"response": [
 						{
@@ -309,11 +309,11 @@
 							"body": "{\n  \"success\": true\n}"
 						},
 						{
-							"name": "400 - Status inválido",
+							"name": "400 - Status invalido",
 							"status": "Bad Request",
 							"code": 400,
 							"header": [{"key": "Content-Type", "value": "application/json"}],
-							"body": "{\n  \"success\": false,\n  \"error\": \"Status inválido\"\n}"
+							"body": "{\n  \"success\": false,\n  \"error\": \"Status invalido\"\n}"
 						}
 					]
 				}
@@ -338,22 +338,22 @@
 							"host": ["{{baseUrl}}"],
 							"path": ["friends", "request"]
 						},
-						"description": "Envia uma solicitação de amizade. Requer autenticação."
+						"description": "Envia uma solicitacao de amizade. Requer autenticacao."
 					},
 					"response": [
 						{
-							"name": "200 - Solicitação enviada",
+							"name": "200 - Solicitacao enviada",
 							"status": "OK",
 							"code": 200,
 							"header": [{"key": "Content-Type", "value": "application/json"}],
-							"body": "{\n  \"success\": true,\n  \"friendship\": {\n    \"_id\": \"aaa111bbb222ccc333ddd444\",\n    \"requester\": \"69b587138cc75dd0bdb8ba6c\",\n    \"recipient\": \"SUBSTITUIR_PELO_ID_DO_DESTINATARIO\",\n    \"status\": \"pending\",\n    \"createdAt\": \"2026-03-14T12:00:00.000Z\",\n    \"updatedAt\": \"2026-03-14T12:00:00.000Z\"\n  }\n}"
+							"body": "{\n  \"success\": true,\n  \"friendship\": {\n    \"_id\": \"aaa111bbb222ccc333ddd444\",\n    \"requester\": \"69b5b2b45066945dadbb638e\",\n    \"recipient\": \"SUBSTITUIR_PELO_ID_DO_DESTINATARIO\",\n    \"status\": \"pending\",\n    \"createdAt\": \"2026-03-14T12:00:00.000Z\",\n    \"updatedAt\": \"2026-03-14T12:00:00.000Z\"\n  }\n}"
 						},
 						{
 							"name": "400 - recipientId ausente",
 							"status": "Bad Request",
 							"code": 400,
 							"header": [{"key": "Content-Type", "value": "application/json"}],
-							"body": "{\n  \"success\": false,\n  \"error\": \"recipientId é obrigatório\"\n}"
+							"body": "{\n  \"success\": false,\n  \"error\": \"recipientId e obrigatorio\"\n}"
 						}
 					]
 				},
@@ -367,11 +367,11 @@
 							"host": ["{{baseUrl}}"],
 							"path": ["friends", "requests"]
 						},
-						"description": "Lista todas as solicitações de amizade pendentes recebidas pelo usuário autenticado."
+						"description": "Lista todas as solicitacoes de amizade pendentes recebidas pelo usuario autenticado."
 					},
 					"response": [
 						{
-							"name": "200 - Lista de solicitações",
+							"name": "200 - Lista de solicitacoes",
 							"status": "OK",
 							"code": 200,
 							"header": [{"key": "Content-Type", "value": "application/json"}],
@@ -389,7 +389,7 @@
 							"host": ["{{baseUrl}}"],
 							"path": ["friends"]
 						},
-						"description": "Lista todos os amigos do usuário autenticado."
+						"description": "Lista todos os amigos do usuario autenticado."
 					},
 					"response": [
 						{
@@ -411,25 +411,25 @@
 							"host": ["{{baseUrl}}"],
 							"path": ["friends", "accept", ":id"],
 							"variable": [
-								{ "key": "id", "value": "SUBSTITUIR_PELO_ID_DA_AMIZADE", "description": "ID da solicitação de amizade" }
+								{ "key": "id", "value": "SUBSTITUIR_PELO_ID_DA_AMIZADE", "description": "ID da solicitacao de amizade" }
 							]
 						},
-						"description": "Aceita uma solicitação de amizade pendente."
+						"description": "Aceita uma solicitacao de amizade pendente."
 					},
 					"response": [
 						{
-							"name": "200 - Solicitação aceita",
+							"name": "200 - Solicitacao aceita",
 							"status": "OK",
 							"code": 200,
 							"header": [{"key": "Content-Type", "value": "application/json"}],
 							"body": "{\n  \"success\": true\n}"
 						},
 						{
-							"name": "400 - Solicitação inválida",
+							"name": "400 - Solicitacao invalida",
 							"status": "Bad Request",
 							"code": 400,
 							"header": [{"key": "Content-Type", "value": "application/json"}],
-							"body": "{\n  \"success\": false,\n  \"error\": \"Solicitação não encontrada ou não pertence a você\"\n}"
+							"body": "{\n  \"success\": false,\n  \"error\": \"Solicitacao nao encontrada ou nao pertence a voce\"\n}"
 						}
 					]
 				},
@@ -443,25 +443,25 @@
 							"host": ["{{baseUrl}}"],
 							"path": ["friends", "reject", ":id"],
 							"variable": [
-								{ "key": "id", "value": "SUBSTITUIR_PELO_ID_DA_AMIZADE", "description": "ID da solicitação de amizade" }
+								{ "key": "id", "value": "SUBSTITUIR_PELO_ID_DA_AMIZADE", "description": "ID da solicitacao de amizade" }
 							]
 						},
-						"description": "Rejeita uma solicitação de amizade pendente."
+						"description": "Rejeita uma solicitacao de amizade pendente."
 					},
 					"response": [
 						{
-							"name": "200 - Solicitação rejeitada",
+							"name": "200 - Solicitacao rejeitada",
 							"status": "OK",
 							"code": 200,
 							"header": [{"key": "Content-Type", "value": "application/json"}],
 							"body": "{\n  \"success\": true\n}"
 						},
 						{
-							"name": "400 - Solicitação inválida",
+							"name": "400 - Solicitacao invalida",
 							"status": "Bad Request",
 							"code": 400,
 							"header": [{"key": "Content-Type", "value": "application/json"}],
-							"body": "{\n  \"success\": false,\n  \"error\": \"Solicitação não encontrada ou não pertence a você\"\n}"
+							"body": "{\n  \"success\": false,\n  \"error\": \"Solicitacao nao encontrada ou nao pertence a voce\"\n}"
 						}
 					]
 				},
@@ -489,11 +489,11 @@
 							"body": "{\n  \"success\": true\n}"
 						},
 						{
-							"name": "400 - Amizade não encontrada",
+							"name": "400 - Amizade nao encontrada",
 							"status": "Bad Request",
 							"code": 400,
 							"header": [{"key": "Content-Type", "value": "application/json"}],
-							"body": "{\n  \"success\": false,\n  \"error\": \"Amizade não encontrada\"\n}"
+							"body": "{\n  \"success\": false,\n  \"error\": \"Amizade nao encontrada\"\n}"
 						}
 					]
 				}
@@ -526,14 +526,14 @@
 							"status": "OK",
 							"code": 200,
 							"header": [{"key": "Content-Type", "value": "application/json"}],
-							"body": "{\n  \"success\": true,\n  \"conversation\": {\n    \"_id\": \"aaa111bbb222ccc333ddd444\",\n    \"participants\": [\n      \"69b587138cc75dd0bdb8ba6c\",\n      \"SUBSTITUIR_PELO_ID_DO_AMIGO\"\n    ],\n    \"archivedBy\": [],\n    \"deletedBy\": [],\n    \"unreadCounts\": {},\n    \"createdAt\": \"2026-03-14T12:10:00.000Z\",\n    \"updatedAt\": \"2026-03-14T12:10:00.000Z\"\n  }\n}"
+							"body": "{\n  \"success\": true,\n  \"conversation\": {\n    \"_id\": \"aaa111bbb222ccc333ddd444\",\n    \"participants\": [\n      \"69b5b2b45066945dadbb638e\",\n      \"SUBSTITUIR_PELO_ID_DO_AMIGO\"\n    ],\n    \"archivedBy\": [],\n    \"deletedBy\": [],\n    \"unreadCounts\": {},\n    \"createdAt\": \"2026-03-14T12:10:00.000Z\",\n    \"updatedAt\": \"2026-03-14T12:10:00.000Z\"\n  }\n}"
 						},
 						{
 							"name": "400 - friendId ausente",
 							"status": "Bad Request",
 							"code": 400,
 							"header": [{"key": "Content-Type", "value": "application/json"}],
-							"body": "{\n  \"success\": false,\n  \"error\": \"friendId é obrigatório\"\n}"
+							"body": "{\n  \"success\": false,\n  \"error\": \"friendId e obrigatorio\"\n}"
 						}
 					]
 				},
@@ -547,7 +547,7 @@
 							"host": ["{{baseUrl}}"],
 							"path": ["chat", "conversations"]
 						},
-						"description": "Lista todas as conversas ativas do usuário autenticado."
+						"description": "Lista todas as conversas ativas do usuario autenticado."
 					},
 					"response": [
 						{
@@ -569,7 +569,7 @@
 							"host": ["{{baseUrl}}"],
 							"path": ["chat", "conversations", "archived"]
 						},
-						"description": "Lista todas as conversas arquivadas do usuário autenticado."
+						"description": "Lista todas as conversas arquivadas do usuario autenticado."
 					},
 					"response": [
 						{
@@ -591,14 +591,14 @@
 							"host": ["{{baseUrl}}"],
 							"path": ["chat", "conversations", ":id", "messages"],
 							"query": [
-								{ "key": "limit", "value": "50", "description": "Quantidade de mensagens (padrão: 50)" },
-								{ "key": "before", "value": "", "description": "ID da mensagem para paginação (cursor). Retorna mensagens anteriores a esta.", "disabled": true }
+								{ "key": "limit", "value": "50", "description": "Quantidade de mensagens (padrao: 50)" },
+								{ "key": "before", "value": "", "description": "ID da mensagem para paginacao (cursor). Retorna mensagens anteriores a esta.", "disabled": true }
 							],
 							"variable": [
 								{ "key": "id", "value": "SUBSTITUIR_PELO_ID_DA_CONVERSA", "description": "ID da conversa" }
 							]
 						},
-						"description": "Retorna as mensagens de uma conversa com paginação por cursor."
+						"description": "Retorna as mensagens de uma conversa com paginacao por cursor."
 					},
 					"response": [
 						{
@@ -606,14 +606,14 @@
 							"status": "OK",
 							"code": 200,
 							"header": [{"key": "Content-Type", "value": "application/json"}],
-							"body": "{\n  \"success\": true,\n  \"messages\": [\n    {\n      \"_id\": \"abc123\",\n      \"conversation\": \"conv456\",\n      \"sender\": {\n        \"_id\": \"69b587138cc75dd0bdb8ba6c\",\n        \"username\": \"lucas_eduardo\",\n        \"name\": \"Lucas Eduardo\"\n      },\n      \"content\": \"Olá! 😄👋\",\n      \"type\": \"text\",\n      \"imageUrl\": null,\n      \"createdAt\": \"2026-03-14T12:15:00.000Z\",\n      \"updatedAt\": \"2026-03-14T12:15:00.000Z\"\n    },\n    {\n      \"_id\": \"abc124\",\n      \"conversation\": \"conv456\",\n      \"sender\": {\n        \"_id\": \"69b587138cc75dd0bdb8ba6c\",\n        \"username\": \"lucas_eduardo\",\n        \"name\": \"Lucas Eduardo\"\n      },\n      \"content\": \"📷 Foto\",\n      \"type\": \"image\",\n      \"imageUrl\": \"data:image/png;base64,iVBORw0KGgo...\",\n      \"createdAt\": \"2026-03-14T12:16:00.000Z\",\n      \"updatedAt\": \"2026-03-14T12:16:00.000Z\"\n    }\n  ]\n}"
+							"body": "{\n  \"success\": true,\n  \"messages\": [\n    {\n      \"_id\": \"abc123\",\n      \"conversation\": \"conv456\",\n      \"sender\": {\n        \"_id\": \"69b5b2b45066945dadbb638e\",\n        \"username\": \"lucasRodrigues\",\n        \"name\": \"Lucas Eduardo\"\n      },\n      \"content\": \"Ola!\",\n      \"type\": \"text\",\n      \"imageUrl\": null,\n      \"createdAt\": \"2026-03-14T12:15:00.000Z\",\n      \"updatedAt\": \"2026-03-14T12:15:00.000Z\"\n    },\n    {\n      \"_id\": \"abc124\",\n      \"conversation\": \"conv456\",\n      \"sender\": {\n        \"_id\": \"69b5b2b45066945dadbb638e\",\n        \"username\": \"lucasRodrigues\",\n        \"name\": \"Lucas Eduardo\"\n      },\n      \"content\": \"Foto\",\n      \"type\": \"image\",\n      \"imageUrl\": \"data:image/png;base64,iVBORw0KGgo...\",\n      \"createdAt\": \"2026-03-14T12:16:00.000Z\",\n      \"updatedAt\": \"2026-03-14T12:16:00.000Z\"\n    }\n  ]\n}"
 						},
 						{
-							"name": "404 - Conversa não encontrada",
+							"name": "404 - Conversa nao encontrada",
 							"status": "Not Found",
 							"code": 404,
 							"header": [{"key": "Content-Type", "value": "application/json"}],
-							"body": "{\n  \"success\": false,\n  \"error\": \"Conversa não encontrada\"\n}"
+							"body": "{\n  \"success\": false,\n  \"error\": \"Conversa nao encontrada\"\n}"
 						}
 					]
 				},
@@ -630,7 +630,7 @@
 								{ "key": "id", "value": "SUBSTITUIR_PELO_ID_DA_CONVERSA", "description": "ID da conversa" }
 							]
 						},
-						"description": "Arquiva uma conversa para o usuário autenticado."
+						"description": "Arquiva uma conversa para o usuario autenticado."
 					},
 					"response": [
 						{
@@ -641,11 +641,11 @@
 							"body": "{\n  \"success\": true\n}"
 						},
 						{
-							"name": "404 - Conversa não encontrada",
+							"name": "404 - Conversa nao encontrada",
 							"status": "Not Found",
 							"code": 404,
 							"header": [{"key": "Content-Type", "value": "application/json"}],
-							"body": "{\n  \"success\": false,\n  \"error\": \"Conversa não encontrada\"\n}"
+							"body": "{\n  \"success\": false,\n  \"error\": \"Conversa nao encontrada\"\n}"
 						}
 					]
 				},
@@ -662,7 +662,7 @@
 								{ "key": "id", "value": "SUBSTITUIR_PELO_ID_DA_CONVERSA", "description": "ID da conversa" }
 							]
 						},
-						"description": "Desarquiva uma conversa para o usuário autenticado."
+						"description": "Desarquiva uma conversa para o usuario autenticado."
 					},
 					"response": [
 						{
@@ -673,11 +673,11 @@
 							"body": "{\n  \"success\": true\n}"
 						},
 						{
-							"name": "404 - Conversa não encontrada",
+							"name": "404 - Conversa nao encontrada",
 							"status": "Not Found",
 							"code": 404,
 							"header": [{"key": "Content-Type", "value": "application/json"}],
-							"body": "{\n  \"success\": false,\n  \"error\": \"Conversa não encontrada\"\n}"
+							"body": "{\n  \"success\": false,\n  \"error\": \"Conversa nao encontrada\"\n}"
 						}
 					]
 				},
@@ -694,7 +694,7 @@
 								{ "key": "id", "value": "SUBSTITUIR_PELO_ID_DA_CONVERSA", "description": "ID da conversa" }
 							]
 						},
-						"description": "Deleta uma conversa para o usuário autenticado (soft delete)."
+						"description": "Deleta uma conversa para o usuario autenticado (soft delete)."
 					},
 					"response": [
 						{
@@ -705,21 +705,21 @@
 							"body": "{\n  \"success\": true\n}"
 						},
 						{
-							"name": "404 - Conversa não encontrada",
+							"name": "404 - Conversa nao encontrada",
 							"status": "Not Found",
 							"code": 404,
 							"header": [{"key": "Content-Type", "value": "application/json"}],
-							"body": "{\n  \"success\": false,\n  \"error\": \"Conversa não encontrada\"\n}"
+							"body": "{\n  \"success\": false,\n  \"error\": \"Conversa nao encontrada\"\n}"
 						}
 					]
 				}
 			]
 		},
 		{
-			"name": "WebSocket Events (Documentação)",
+			"name": "WebSocket Events (Documentacao)",
 			"item": [
 				{
-					"name": "📤 message:send (texto com emoji)",
+					"name": "message:send (texto com emoji)",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -728,12 +728,12 @@
 							"host": ["{{baseUrl}}"],
 							"path": ["health"]
 						},
-						"description": "**Evento WebSocket** (não é rota HTTP - documentação apenas)\n\nEnvia uma mensagem de texto com suporte a emojis.\n\n**Evento:** `message:send`\n\n**Payload:**\n```json\n{\n  \"conversationId\": \"id_da_conversa\",\n  \"content\": \"Olá! 😄👋🎉\",\n  \"tempId\": \"uuid-temporario\",\n  \"type\": \"text\"\n}\n```\n\n**Resposta (message:ack):**\n```json\n{\n  \"_id\": \"id_mensagem\",\n  \"conversationId\": \"id_da_conversa\",\n  \"sender\": { \"id\": \"user_id\", \"username\": \"lucas_eduardo\" },\n  \"content\": \"Olá! 😄👋🎉\",\n  \"type\": \"text\",\n  \"tempId\": \"uuid-temporario\",\n  \"createdAt\": \"2026-03-14T12:00:00.000Z\"\n}\n```\n\n**Emojis suportados:** Todos os emojis Unicode são suportados nativamente. Exemplos: 😀😂❤️🔥👍🎉💬📸🖼️✨"
+						"description": "**Evento WebSocket** (nao e rota HTTP - documentacao apenas)\n\nEnvia uma mensagem de texto com suporte a emojis.\n\n**Evento:** `message:send`\n\n**Payload:**\n```json\n{\n  \"conversationId\": \"id_da_conversa\",\n  \"content\": \"Ola! Tudo bem?\",\n  \"tempId\": \"uuid-temporario\",\n  \"type\": \"text\"\n}\n```\n\n**Resposta (message:ack):**\n```json\n{\n  \"_id\": \"id_mensagem\",\n  \"conversationId\": \"id_da_conversa\",\n  \"sender\": { \"id\": \"user_id\", \"username\": \"lucasRodrigues\" },\n  \"content\": \"Ola! Tudo bem?\",\n  \"type\": \"text\",\n  \"tempId\": \"uuid-temporario\",\n  \"createdAt\": \"2026-03-14T12:00:00.000Z\"\n}\n```\n\n**Emojis suportados:** Todos os emojis Unicode sao suportados nativamente."
 					},
 					"response": []
 				},
 				{
-					"name": "📷 message:send (foto/imagem)",
+					"name": "message:send (foto/imagem)",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -742,12 +742,12 @@
 							"host": ["{{baseUrl}}"],
 							"path": ["health"]
 						},
-						"description": "**Evento WebSocket** (não é rota HTTP - documentação apenas)\n\nEnvia uma mensagem com imagem/foto.\n\n**Evento:** `message:send`\n\n**Payload:**\n```json\n{\n  \"conversationId\": \"id_da_conversa\",\n  \"content\": \"Olha essa foto!\",\n  \"tempId\": \"uuid-temporario\",\n  \"type\": \"image\",\n  \"imageUrl\": \"data:image/png;base64,iVBORw0KGgoAAAANSUhEUg...\"\n}\n```\n\n**Campos:**\n- `type`: `\"image\"` (obrigatório para fotos)\n- `imageUrl`: string base64 da imagem (obrigatório quando type=image)\n- `content`: legenda opcional (se vazio, será \"📷 Foto\")\n- `tempId`: ID temporário para rastrear o envio\n\n**Resposta (message:ack):**\n```json\n{\n  \"_id\": \"id_mensagem\",\n  \"conversationId\": \"id_da_conversa\",\n  \"sender\": { \"id\": \"user_id\", \"username\": \"lucas_eduardo\" },\n  \"content\": \"Olha essa foto!\",\n  \"type\": \"image\",\n  \"imageUrl\": \"data:image/png;base64,iVBORw0KGgo...\",\n  \"tempId\": \"uuid-temporario\",\n  \"createdAt\": \"2026-03-14T12:01:00.000Z\"\n}\n```\n\n**Limite:** 5MB por imagem (maxHttpBufferSize do Socket.IO)"
+						"description": "**Evento WebSocket** (nao e rota HTTP - documentacao apenas)\n\nEnvia uma mensagem com imagem/foto.\n\n**Evento:** `message:send`\n\n**Payload:**\n```json\n{\n  \"conversationId\": \"id_da_conversa\",\n  \"content\": \"Olha essa foto!\",\n  \"tempId\": \"uuid-temporario\",\n  \"type\": \"image\",\n  \"imageUrl\": \"data:image/png;base64,iVBORw0KGgoAAAANSUhEUg...\"\n}\n```\n\n**Campos:**\n- `type`: `\"image\"` (obrigatorio para fotos)\n- `imageUrl`: string base64 da imagem (obrigatorio quando type=image)\n- `content`: legenda opcional (se vazio, sera \"Foto\")\n- `tempId`: ID temporario para rastrear o envio\n\n**Resposta (message:ack):**\n```json\n{\n  \"_id\": \"id_mensagem\",\n  \"conversationId\": \"id_da_conversa\",\n  \"sender\": { \"id\": \"user_id\", \"username\": \"lucasRodrigues\" },\n  \"content\": \"Olha essa foto!\",\n  \"type\": \"image\",\n  \"imageUrl\": \"data:image/png;base64,iVBORw0KGgo...\",\n  \"tempId\": \"uuid-temporario\",\n  \"createdAt\": \"2026-03-14T12:01:00.000Z\"\n}\n```\n\n**Limite:** 5MB por imagem (maxHttpBufferSize do Socket.IO)"
 					},
 					"response": []
 				},
 				{
-					"name": "📩 message:new (receber mensagem)",
+					"name": "message:new (receber mensagem)",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -756,12 +756,12 @@
 							"host": ["{{baseUrl}}"],
 							"path": ["health"]
 						},
-						"description": "**Evento WebSocket** (não é rota HTTP - documentação apenas)\n\nEvento recebido quando outro usuário envia uma mensagem.\n\n**Evento:** `message:new`\n\n**Payload recebido:**\n```json\n{\n  \"_id\": \"id_mensagem\",\n  \"conversationId\": \"id_da_conversa\",\n  \"sender\": { \"id\": \"user_id\", \"username\": \"outro_usuario\" },\n  \"content\": \"Mensagem com emoji! 🎉\",\n  \"type\": \"text\",\n  \"tempId\": \"uuid-do-remetente\",\n  \"createdAt\": \"2026-03-14T12:00:00.000Z\"\n}\n```\n\nPara mensagens com imagem, o campo `type` será `\"image\"` e `imageUrl` conterá a string base64."
+						"description": "**Evento WebSocket** (nao e rota HTTP - documentacao apenas)\n\nEvento recebido quando outro usuario envia uma mensagem.\n\n**Evento:** `message:new`\n\n**Payload recebido:**\n```json\n{\n  \"_id\": \"id_mensagem\",\n  \"conversationId\": \"id_da_conversa\",\n  \"sender\": { \"id\": \"user_id\", \"username\": \"outro_usuario\" },\n  \"content\": \"Mensagem recebida!\",\n  \"type\": \"text\",\n  \"tempId\": \"uuid-do-remetente\",\n  \"createdAt\": \"2026-03-14T12:00:00.000Z\"\n}\n```\n\nPara mensagens com imagem, o campo `type` sera `\"image\"` e `imageUrl` contera a string base64."
 					},
 					"response": []
 				},
 				{
-					"name": "✅ message:read (marcar como lida)",
+					"name": "message:read (marcar como lida)",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -770,12 +770,12 @@
 							"host": ["{{baseUrl}}"],
 							"path": ["health"]
 						},
-						"description": "**Evento WebSocket** (não é rota HTTP - documentação apenas)\n\nMarca mensagens de uma conversa como lidas e reseta o contador de unread.\n\n**Evento:** `message:read`\n\n**Payload:**\n```json\n{\n  \"conversationId\": \"id_da_conversa\"\n}\n```"
+						"description": "**Evento WebSocket** (nao e rota HTTP - documentacao apenas)\n\nMarca mensagens de uma conversa como lidas e reseta o contador de unread.\n\n**Evento:** `message:read`\n\n**Payload:**\n```json\n{\n  \"conversationId\": \"id_da_conversa\"\n}\n```"
 					},
 					"response": []
 				},
 				{
-					"name": "⌨️ typing:start / typing:stop",
+					"name": "typing:start / typing:stop",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -784,12 +784,12 @@
 							"host": ["{{baseUrl}}"],
 							"path": ["health"]
 						},
-						"description": "**Evento WebSocket** (não é rota HTTP - documentação apenas)\n\nIndicadores de digitação.\n\n**Enviar typing:start:**\n```json\n{\n  \"conversationId\": \"id_da_conversa\"\n}\n```\n\n**Enviar typing:stop:**\n```json\n{\n  \"conversationId\": \"id_da_conversa\"\n}\n```\n\n**Receber typing:start:**\n```json\n{\n  \"conversationId\": \"id_da_conversa\",\n  \"userId\": \"id_do_usuario\",\n  \"username\": \"nome_do_usuario\"\n}\n```"
+						"description": "**Evento WebSocket** (nao e rota HTTP - documentacao apenas)\n\nIndicadores de digitacao.\n\n**Enviar typing:start:**\n```json\n{\n  \"conversationId\": \"id_da_conversa\"\n}\n```\n\n**Enviar typing:stop:**\n```json\n{\n  \"conversationId\": \"id_da_conversa\"\n}\n```\n\n**Receber typing:start:**\n```json\n{\n  \"conversationId\": \"id_da_conversa\",\n  \"userId\": \"id_do_usuario\",\n  \"username\": \"nome_do_usuario\"\n}\n```"
 					},
 					"response": []
 				},
 				{
-					"name": "🟢 status:change / user:status",
+					"name": "status:change / user:status",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -798,7 +798,7 @@
 							"host": ["{{baseUrl}}"],
 							"path": ["health"]
 						},
-						"description": "**Evento WebSocket** (não é rota HTTP - documentação apenas)\n\nAltera o status do usuário e notifica amigos.\n\n**Enviar status:change:**\n```json\n{\n  \"status\": \"online\"\n}\n```\nValores: `online`, `offline`, `ausente`, `ocupado`\n\n**Receber user:status (notificação de amigo):**\n```json\n{\n  \"userId\": \"id_do_amigo\",\n  \"username\": \"nome_do_amigo\",\n  \"status\": \"online\"\n}\n```"
+						"description": "**Evento WebSocket** (nao e rota HTTP - documentacao apenas)\n\nAltera o status do usuario e notifica amigos.\n\n**Enviar status:change:**\n```json\n{\n  \"status\": \"online\"\n}\n```\nValores: `online`, `offline`, `ausente`, `ocupado`\n\n**Receber user:status (notificacao de amigo):**\n```json\n{\n  \"userId\": \"id_do_amigo\",\n  \"username\": \"nome_do_amigo\",\n  \"status\": \"online\"\n}\n```"
 					},
 					"response": []
 				}
@@ -806,3 +806,4 @@
 		}
 	]
 }
+
